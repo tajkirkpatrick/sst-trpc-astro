@@ -1,0 +1,19 @@
+{
+  "name": "@my-sst-app/functions",
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "test": "sst bind vitest",
+    "typecheck": "tsc -noEmit"
+  },
+  "devDependencies": {
+    "@types/aws-lambda": "^8.10.119",
+    "@types/node": "^20.5.6",
+    "sst": "^2.24.16",
+    "vitest": "^0.34.3"
+  },
+  "dependencies": {
+    "@trpc/server": "^10.38.0",
+    "zod": "^3.22.2"
+  }
+}

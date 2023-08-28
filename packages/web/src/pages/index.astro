@@ -1,0 +1,51 @@
+---
+import Layout from "../layouts/Layout.astro";
+---
+
+<Layout title="Welcome to Astro.">
+  <main>
+    <h1 id="greeting">Hello User!</h1>
+    <p>Press click me to change my name!</p>
+    <button
+      id="btn"
+      class="border-2 border-black rounded-md py-2 px-4 bg-slate-500/20 disabled:bg-blue-500/50"
+    >
+      Click Me
+    </button>
+    <button
+      id="btn2"
+      class="border-2 border-black rounded-md py-2 px-4 bg-slate-500/20 disabled:bg-blue-500/50"
+    >
+      Go Back
+    </button>
+    <script>
+      import { trpcClient } from "../lib/trpc";
+
+      const greeting = document.getElementById("greeting");
+
+      const btn = document.getElementById("btn") as HTMLButtonElement;
+      btn.onclick = async () => {
+        console.log("fetching...");
+        btn.disabled = true;
+        btn.innerHTML = "Loading...";
+        const resp = await trpcClient.getHello.query();
+        console.log("fetch complete.");
+        btn.disabled = false;
+        btn.innerHTML = "Click Me";
+        greeting.innerHTML = resp;
+      };
+
+      const btn2 = document.getElementById("btn2") as HTMLButtonElement;
+      btn2.onclick = async () => {
+        console.log("fetching...");
+        btn2.disabled = true;
+        btn2.innerHTML = "Loading...";
+        const resp = await trpcClient.sayHello.mutate({ name: "User!" });
+        console.log("fetch complete.");
+        btn2.disabled = false;
+        btn2.innerHTML = "Go Back";
+        greeting.innerHTML = resp;
+      };
+    </script>
+  </main>
+</Layout>
