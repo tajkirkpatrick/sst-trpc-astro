@@ -1,6 +1,8 @@
-import { initTRPC } from "@trpc/server";
+import { TRPCError, initTRPC } from "@trpc/server";
 import { Context } from "./context";
 import * as z from "zod";
+
+import * as schema from "../../../core/src/drizzle/schema";
 
 /**
  * Initialization of tRPC backend
@@ -15,13 +17,32 @@ const router = t.router;
 const publicProcedure = t.procedure;
 
 export const appRouter = router({
-  getHello: publicProcedure.query(() => {
-    return "Hello World!";
+  getRecords: publicProcedure.query(async ({ ctx }) => {
+    try {
+      return await ctx.db.select().from(schema.usersTable);
+    } catch (err) {
+      return new TRPCError({
+        code: "INTERNAL_SERVER_ERROR",
+        message: JSON.stringify(err),
+      });
+    }
   }),
-  sayHello: publicProcedure
+  createRecord: publicProcedure
     .input(z.object({ name: z.string() }))
-    .mutation(({ input }) => {
-      return `Hello ${input.name.toUpperCase()}!`;
+    .mutation(async ({ input, ctx }) => {
+      const newRecord = await ctx.db
+        .insert(schema.usersTable)
+        .values({ fullName: input.name })
+        .returning();
+
+      if (newRecord.length === 0) {
+        return new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Something went wrong",
+        });
+      }
+
+      return newRecord;
     }),
 });
 

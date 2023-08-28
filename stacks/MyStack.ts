@@ -1,11 +1,22 @@
-import { StackContext, Api, AstroSite } from "sst/constructs";
+import { StackContext, Api, AstroSite, RDS } from "sst/constructs";
 
 export function API({ stack }: StackContext) {
+  const pgDb = new RDS(stack, "Database", {
+    engine: "postgresql13.9",
+    defaultDatabaseName: "my_database",
+  });
+
   const api = new Api(stack, "api", {
-    defaults: {},
+    defaults: {
+      function: {
+        bind: [pgDb],
+      },
+    },
     routes: {
       "GET /api/trpc/{proxy+}": "packages/functions/src/trpc.handler",
       "POST /api/trpc/{proxy+}": "packages/functions/src/trpc.handler",
+      "GET /api/db/up": "packages/core/src/migrate-up.handler",
+      "GET /api/db/down": "packages/core/src/migrate-down.handler",
     },
   });
 
