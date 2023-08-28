@@ -5,7 +5,7 @@
   "scripts": {
     "test": "sst bind vitest",
     "typecheck": "tsc -noEmit",
-    "generate": "drizzle-kit generate:pg --schema=./src/drizzle/schema.ts --out=./src/drizzle/out"
+    "generate": "drizzle-kit generate:pg --schema=./src/drizzle/schema.ts --out=./src/drizzle/out/"
   },
   "devDependencies": {
     "@types/node": "^20.5.6",
