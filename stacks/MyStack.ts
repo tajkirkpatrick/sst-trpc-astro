@@ -2,7 +2,6 @@ import { StackContext, Api, AstroSite } from "sst/constructs";
 
 export function API({ stack }: StackContext) {
   const api = new Api(stack, "api", {
-    defaults: {},
     routes: {
       "GET /api/trpc/{proxy+}": "packages/functions/src/trpc.handler",
       "POST /api/trpc/{proxy+}": "packages/functions/src/trpc.handler",
