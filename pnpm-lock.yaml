@@ -31,7 +31,10 @@ importers:
         version: 3.398.0
       drizzle-orm:
         specifier: ^0.28.5
-        version: 0.28.5(@aws-sdk/client-rds-data@3.398.0)(kysely@0.25.0)
+        version: 0.28.5(@aws-sdk/client-rds-data@3.398.0)(kysely@0.26.3)
+      kysely:
+        specifier: ^0.26.3
+        version: 0.26.3
       zod:
         specifier: ^3.22.2
         version: 3.22.2
@@ -4312,7 +4315,7 @@ packages:
       - supports-color
     dev: true
 
-  /drizzle-orm@0.28.5(@aws-sdk/client-rds-data@3.398.0)(kysely@0.25.0):
+  /drizzle-orm@0.28.5(@aws-sdk/client-rds-data@3.398.0)(kysely@0.26.3):
     resolution: {integrity: sha512-6r6Iw4c38NAmW6TiKH3TUpGUQ1YdlEoLJOQptn8XPx3Z63+vFNKfAiANqrIiYZiMjKR9+NYAL219nFrmo1duXA==}
     peerDependencies:
       '@aws-sdk/client-rds-data': '>=3'
@@ -4375,7 +4378,7 @@ packages:
         optional: true
     dependencies:
       '@aws-sdk/client-rds-data': 3.398.0
-      kysely: 0.25.0
+      kysely: 0.26.3
     dev: false
 
   /dset@3.1.2:

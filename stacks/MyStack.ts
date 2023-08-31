@@ -4,6 +4,7 @@ export function API({ stack }: StackContext) {
   const pgDb = new RDS(stack, "Database", {
     engine: "postgresql13.9",
     defaultDatabaseName: "my_database",
+    migrations: "packages/core/migrations",
   });
 
   const api = new Api(stack, "api", {
@@ -15,8 +16,6 @@ export function API({ stack }: StackContext) {
     routes: {
       "GET /api/trpc/{proxy+}": "packages/functions/src/trpc.handler",
       "POST /api/trpc/{proxy+}": "packages/functions/src/trpc.handler",
-      "GET /api/db/up": "packages/core/src/migrate-up.handler",
-      "GET /api/db/down": "packages/core/src/migrate-down.handler",
     },
   });
 

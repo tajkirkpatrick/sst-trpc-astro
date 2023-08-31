@@ -18,14 +18,14 @@ const publicProcedure = t.procedure;
 
 export const appRouter = router({
   getRecords: publicProcedure.query(async ({ ctx }) => {
-    try {
-      return await ctx.db.select().from(schema.usersTable);
-    } catch (err) {
-      return new TRPCError({
-        code: "INTERNAL_SERVER_ERROR",
-        message: JSON.stringify(err),
-      });
-    }
+    // try {
+    return await ctx.db.select().from(schema.usersTable);
+    // } catch (err) {
+    //   return new TRPCError({
+    //     code: "INTERNAL_SERVER_ERROR",
+    //     message: JSON.stringify(err),
+    //   });
+    // }
   }),
   createRecord: publicProcedure
     .input(z.object({ name: z.string() }))
