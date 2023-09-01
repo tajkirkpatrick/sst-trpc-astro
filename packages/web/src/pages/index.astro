@@ -4,20 +4,19 @@ import Layout from "../layouts/Layout.astro";
 
 <Layout title="Welcome to Astro.">
   <main>
-    <h1 id="greeting">Hello User!</h1>
-    <p>Press click me to change my name!</p>
+    <h1 id="greeting">Welcome!</h1>
+    <!-- style the input using tailwind css with a gray border and a ring on focus -->
+    <input
+      type="text"
+      name="name"
+      class="border-2 border-gray-300 focus:ring-2 focus:ring-blue-500 h-8"
+    />
     <button
       id="btn"
       class="border-2 border-black rounded-md py-2 px-4 bg-slate-500/20 disabled:bg-blue-500/50"
     >
       Click Me
     </button>
-    <!-- <button
-      id="btn2"
-      class="border-2 border-black rounded-md py-2 px-4 bg-slate-500/20 disabled:bg-blue-500/50"
-    >
-      Go Back
-    </button> -->
     <script>
       import { trpcClient } from "../lib/trpc";
 
@@ -25,27 +24,27 @@ import Layout from "../layouts/Layout.astro";
 
       const btn = document.getElementById("btn") as HTMLButtonElement;
       btn.onclick = async () => {
+        // capture the text in the input element and check that it is not blank, if it is blank alert invalid input
+        const name = document.querySelector(
+          "input[name=name]"
+        ) as HTMLInputElement;
+
+        if (name.value === "") {
+          alert("Invalid input");
+          return;
+        }
+
         console.log("fetching...");
         btn.disabled = true;
         btn.innerHTML = "Loading...";
-        const resp = await trpcClient.createRecord.mutate({ name: "AAA" });
+        const [resp] = await trpcClient.createRecord.mutate({
+          name: name.value,
+        });
         console.log("fetch complete.");
         btn.disabled = false;
         btn.innerHTML = "Click Me";
-        greeting.innerHTML = resp;
+        greeting.innerHTML = resp.fullName;
       };
-
-      // const btn2 = document.getElementById("btn2") as HTMLButtonElement;
-      // btn2.onclick = async () => {
-      //   console.log("fetching...");
-      //   btn2.disabled = true;
-      //   btn2.innerHTML = "Loading...";
-      //   const resp = await trpcClient.sayHello.mutate({ name: "User!" });
-      //   console.log("fetch complete.");
-      //   btn2.disabled = false;
-      //   btn2.innerHTML = "Go Back";
-      //   greeting.innerHTML = resp;
-      // };
     </script>
   </main>
 </Layout>
