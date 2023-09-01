@@ -3,7 +3,7 @@ import { StackContext, Api, AstroSite, RDS } from "sst/constructs";
 export function API({ stack }: StackContext) {
   const pgDb = new RDS(stack, "Database", {
     engine: "postgresql13.9",
-    defaultDatabaseName: "my_database",
+    defaultDatabaseName: "myDatabase",
     migrations: "packages/core/migrations",
   });
 
@@ -23,6 +23,8 @@ export function API({ stack }: StackContext) {
     path: "packages/web",
     environment: {
       PUBLIC_TRPC_URL: api.url,
+      DB_URL: pgDb.clusterEndpoint.socketAddress,
+      DB_TABLE: pgDb.defaultDatabaseName,
     },
   });
 

@@ -17,6 +17,7 @@
     "@aws-sdk/client-rds-data": "^3.398.0",
     "drizzle-orm": "^0.28.5",
     "kysely": "^0.26.3",
+    "ulid": "^2.3.0",
     "zod": "^3.22.2"
   }
 }

@@ -1,8 +1,12 @@
+import { NewUser } from "./../../../core/src/drizzle/schema";
 import { TRPCError, initTRPC } from "@trpc/server";
-import { Context } from "./context";
 import * as z from "zod";
 
-import * as schema from "../../../core/src/drizzle/schema";
+import {
+  type NewUser,
+  customUsersTable,
+} from "../../../core/src/drizzle/schema";
+import { Context } from "./context";
 
 /**
  * Initialization of tRPC backend
@@ -18,27 +22,28 @@ const publicProcedure = t.procedure;
 
 export const appRouter = router({
   getRecords: publicProcedure.query(async ({ ctx }) => {
-    // try {
-    return await ctx.db.select().from(schema.usersTable);
-    // } catch (err) {
-    //   return new TRPCError({
-    //     code: "INTERNAL_SERVER_ERROR",
-    //     message: JSON.stringify(err),
-    //   });
-    // }
+    try {
+      return await ctx.db.select().from(customUsersTable);
+    } catch (err) {
+      return new TRPCError({
+        code: "INTERNAL_SERVER_ERROR",
+        message:
+          "Something went wrong retrieving records from the users table.",
+      });
+    }
   }),
   createRecord: publicProcedure
     .input(z.object({ name: z.string() }))
     .mutation(async ({ input, ctx }) => {
       const newRecord = await ctx.db
-        .insert(schema.usersTable)
+        .insert(customUsersTable)
         .values({ fullName: input.name })
         .returning();
 
       if (newRecord.length === 0) {
         return new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
-          message: "Something went wrong",
+          message: "Something went wrong creating your record.",
         });
       }
 

@@ -28,7 +28,7 @@ import Layout from "../layouts/Layout.astro";
         console.log("fetching...");
         btn.disabled = true;
         btn.innerHTML = "Loading...";
-        const resp = await trpcClient.getRecords.query();
+        const resp = await trpcClient.createRecord.mutate({ name: "AAA" });
         console.log("fetch complete.");
         btn.disabled = false;
         btn.innerHTML = "Click Me";
