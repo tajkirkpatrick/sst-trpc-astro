@@ -17,34 +17,33 @@ import Layout from "../layouts/Layout.astro";
     >
       Click Me
     </button>
-    <script>
-      import { trpcClient } from "../lib/trpc";
-
-      const greeting = document.getElementById("greeting");
-
-      const btn = document.getElementById("btn") as HTMLButtonElement;
-      btn.onclick = async () => {
-        // capture the text in the input element and check that it is not blank, if it is blank alert invalid input
-        const name = document.querySelector(
-          "input[name=name]"
-        ) as HTMLInputElement;
-
-        if (name.value === "") {
-          alert("Invalid input");
-          return;
-        }
-
-        console.log("fetching...");
-        btn.disabled = true;
-        btn.innerHTML = "Loading...";
-        const [resp] = await trpcClient.createRecord.mutate({
-          name: name.value,
-        });
-        console.log("fetch complete.");
-        btn.disabled = false;
-        btn.innerHTML = "Click Me";
-        greeting.innerHTML = resp.fullName;
-      };
-    </script>
   </main>
 </Layout>
+
+<script>
+  import { trpcClient } from "../lib/trpc";
+
+  const greeting = document.getElementById("greeting")!;
+
+  const btn = document.getElementById("btn") as HTMLButtonElement;
+  btn.onclick = async () => {
+    // capture the text in the input element and check that it is not blank, if it is blank alert invalid input
+    const name = document.querySelector("input[name=name]") as HTMLInputElement;
+
+    if (name.value === "") {
+      alert("Invalid input");
+      return;
+    }
+
+    console.log("fetching...");
+    btn.disabled = true;
+    btn.innerHTML = "Loading...";
+    const [resp] = await trpcClient.createRecord.mutate({
+      name: name.value,
+    });
+    console.log("fetch complete.");
+    btn.disabled = false;
+    btn.innerHTML = "Click Me";
+    greeting.innerHTML = resp.fullName;
+  };
+</script>

@@ -1,8 +1,13 @@
 import { TRPCError, initTRPC } from "@trpc/server";
 import * as z from "zod";
+import { toZod } from "tozod";
 
-import { type NewUser, customUsersTable } from "@/drizzle/schema";
+import { usersTable, type NewUser } from "@/drizzle/schema";
 import { Context } from "./context";
+
+const insertUserSchema: toZod<NewUser> = z.object({
+  fullName: z.string().min(1).optional(),
+});
 
 /**
  * Initialization of tRPC backend
@@ -19,31 +24,46 @@ const publicProcedure = t.procedure;
 export const appRouter = router({
   getRecords: publicProcedure.query(async ({ ctx }) => {
     try {
-      return await ctx.db.select().from(customUsersTable);
+      return await ctx.db.select().from(usersTable);
     } catch (err) {
       return new TRPCError({
         code: "INTERNAL_SERVER_ERROR",
-        message:
-          "Something went wrong retrieving records from the users table.",
+        message: "Something went wrong retrieving records from the database.",
       });
     }
   }),
   createRecord: publicProcedure
-    .input(z.object({ name: z.string() }))
+    .input(insertUserSchema)
     .mutation(async ({ input, ctx }) => {
-      const newRecord = await ctx.db
-        .insert(customUsersTable)
-        .values({ fullName: input.name })
-        .returning();
+      try {
+        // check if input.fullName is null or undefined
+        if (!input.fullName) {
+          return new TRPCError({
+            code: "BAD_REQUEST",
+            cause: new Error("input.fullName is null or undefined"),
+            message: "Please provide a name.",
+          });
+        }
 
-      if (newRecord.length === 0) {
+        const newRecord = await ctx.db
+          .insert(usersTable)
+          .values({ fullName: input.fullName })
+          .returning();
+
+        if (newRecord.length === 0) {
+          return new TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+          });
+        }
+
+        return newRecord;
+      } catch (err) {
         return new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
           message: "Something went wrong creating your record.",
+          cause: err,
         });
       }
-
-      return newRecord;
     }),
 });
 

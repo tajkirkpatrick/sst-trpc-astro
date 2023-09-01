@@ -2,19 +2,11 @@
 import { ulid } from "ulid";
 import { pgTable, text, bigint, varchar } from "drizzle-orm/pg-core";
 
-export const customUsersTable = pgTable("users", {
-  id: varchar("id")
-    .primaryKey()
-    .$defaultFn(() => ulid()),
-  fullName: text("fullName"),
-});
+const USER_ID_LENGTH = 26; // change this when using custom user ids
 
-export type User = typeof customUsersTable.$inferSelect;
-export type NewUser = typeof customUsersTable.$inferInsert;
-
-export const usersTable = pgTable("auth_user", {
+export const usersTable = pgTable("users", {
   id: varchar("id", {
-    length: 15, // change this when using custom user ids
+    length: USER_ID_LENGTH,
   })
     .primaryKey()
     .$defaultFn(() => ulid()),
@@ -22,7 +14,11 @@ export const usersTable = pgTable("auth_user", {
   fullName: text("full_name"),
 });
 
-export const sessionsTable = pgTable("user_session", {
+// Now, you can apply this helper to your type
+export type User = typeof usersTable.$inferSelect;
+export type NewUser = Omit<typeof usersTable.$inferInsert, "id">;
+
+export const sessionsTable = pgTable("auth_sessions", {
   id: varchar("id", {
     length: 128,
   }).primaryKey(),
@@ -39,7 +35,7 @@ export const sessionsTable = pgTable("user_session", {
   }).notNull(),
 });
 
-export const keysTable = pgTable("user_key", {
+export const keysTable = pgTable("auth_keys", {
   id: varchar("id", {
     length: 255,
   }).primaryKey(),

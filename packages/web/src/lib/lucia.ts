@@ -15,7 +15,7 @@ export const auth = lucia({
   env: import.meta.env.DEV ? "DEV" : "PROD",
   middleware: astro(),
   adapter: pg(pool, {
-    user: "auth_users",
+    user: "users",
     session: "auth_sessions",
     key: "auth_keys",
   }),

@@ -38,6 +38,9 @@ importers:
       kysely:
         specifier: ^0.26.3
         version: 0.26.3
+      tozod:
+        specifier: ^3.0.0
+        version: 3.0.0(zod@3.22.2)
       ulid:
         specifier: ^2.3.0
         version: 2.3.0
@@ -7685,6 +7688,14 @@ packages:
   /toidentifier@1.0.1:
     resolution: {integrity: sha512-o5sSPKEkg/DIQNmH43V0/uerLrpzVedkUh8tGNvaeXpfpuwjKenlSox/2O/BTlZUtEe+JG7s5YhEz608PlAHRA==}
     engines: {node: '>=0.6'}
+
+  /tozod@3.0.0(zod@3.22.2):
+    resolution: {integrity: sha512-R03/moNPEGgWKoTdCsEJuyEoP6NtXyhWg9L9lJhF2XyCR2Ce9XE+yXaswaVmqyBpHsRPC2Pk38mK8Ex7iHaXcg==}
+    peerDependencies:
+      zod: ^3.0.0-alpha.2
+    dependencies:
+      zod: 3.22.2
+    dev: false
 
   /tree-kill@1.2.2:
     resolution: {integrity: sha512-L0Orpi8qGpRG//Nd+H90vFB+3iHnue1zSSGmNOOCh1GLJ7rUKVwV2HvijphGQS2UmhUZewS9VgvxYIdgr+fG1A==}

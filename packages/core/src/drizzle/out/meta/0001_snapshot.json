@@ -1,33 +1,11 @@
 {
   "version": "5",
   "dialect": "pg",
-  "id": "6dfc06a8-e9a8-4580-aafa-640b9555623f",
+  "id": "34761aaa-fdf6-4797-b63b-0b6188c20e34",
   "prevId": "7937bebd-c65a-4807-8843-f2e33459fd6e",
   "tables": {
-    "users": {
-      "name": "users",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "serial",
-          "primaryKey": true,
-          "notNull": true
-        },
-        "fullName": {
-          "name": "fullName",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {},
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
-    },
-    "user_key": {
-      "name": "user_key",
+    "auth_keys": {
+      "name": "auth_keys",
       "schema": "",
       "columns": {
         "id": {
@@ -51,10 +29,10 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "user_key_user_id_auth_user_id_fk": {
-          "name": "user_key_user_id_auth_user_id_fk",
-          "tableFrom": "user_key",
-          "tableTo": "auth_user",
+        "auth_keys_user_id_users_id_fk": {
+          "name": "auth_keys_user_id_users_id_fk",
+          "tableFrom": "auth_keys",
+          "tableTo": "users",
           "columnsFrom": [
             "user_id"
           ],
@@ -68,8 +46,8 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
-    "user_session": {
-      "name": "user_session",
+    "auth_sessions": {
+      "name": "auth_sessions",
       "schema": "",
       "columns": {
         "id": {
@@ -99,10 +77,10 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "user_session_user_id_auth_user_id_fk": {
-          "name": "user_session_user_id_auth_user_id_fk",
-          "tableFrom": "user_session",
-          "tableTo": "auth_user",
+        "auth_sessions_user_id_users_id_fk": {
+          "name": "auth_sessions_user_id_users_id_fk",
+          "tableFrom": "auth_sessions",
+          "tableTo": "users",
           "columnsFrom": [
             "user_id"
           ],
@@ -116,13 +94,13 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
-    "auth_user": {
-      "name": "auth_user",
+    "users": {
+      "name": "users",
       "schema": "",
       "columns": {
         "id": {
           "name": "id",
-          "type": "varchar(15)",
+          "type": "varchar(26)",
           "primaryKey": true,
           "notNull": true
         },
@@ -144,6 +122,8 @@
   "_meta": {
     "schemas": {},
     "tables": {},
-    "columns": {}
+    "columns": {
+      "\"users\".\"fullName\"": "\"users\".\"full_name\""
+    }
   }
 }
