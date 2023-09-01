@@ -1,7 +1,8 @@
+import { APIGatewayProxyEventV2 } from "aws-lambda";
 import { inferAsyncReturnType } from "@trpc/server";
 import { CreateAWSLambdaContextOptions } from "@trpc/server/adapters/aws-lambda";
-import { APIGatewayProxyEventV2 } from "aws-lambda";
-import { db } from "../../../core/src/drizzle";
+
+import { db } from "@/drizzle";
 
 /**
  * Defines your inner context shape.

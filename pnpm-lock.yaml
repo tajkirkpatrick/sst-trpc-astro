@@ -29,6 +29,9 @@ importers:
       '@aws-sdk/client-rds-data':
         specifier: ^3.398.0
         version: 3.398.0
+      '@trpc/server':
+        specifier: ^10.38.1
+        version: 10.38.1
       drizzle-orm:
         specifier: ^0.28.5
         version: 0.28.5(@aws-sdk/client-rds-data@3.398.0)(kysely@0.26.3)
@@ -42,6 +45,9 @@ importers:
         specifier: ^3.22.2
         version: 3.22.2
     devDependencies:
+      '@types/aws-lambda':
+        specifier: ^8.10.119
+        version: 8.10.119
       '@types/node':
         specifier: ^20.5.6
         version: 20.5.6
@@ -56,17 +62,7 @@ importers:
         version: 0.34.3
 
   packages/functions:
-    dependencies:
-      '@trpc/server':
-        specifier: ^10.38.0
-        version: 10.38.0
-      zod:
-        specifier: ^3.22.2
-        version: 3.22.2
     devDependencies:
-      '@types/aws-lambda':
-        specifier: ^8.10.119
-        version: 8.10.119
       '@types/node':
         specifier: ^20.5.6
         version: 20.5.6
@@ -76,12 +72,6 @@ importers:
       vitest:
         specifier: ^0.34.3
         version: 0.34.3
-
-  packages/migrations:
-    dependencies:
-      kysely:
-        specifier: ^0.26.3
-        version: 0.26.3
 
   packages/web:
     dependencies:
@@ -3117,6 +3107,10 @@ packages:
 
   /@trpc/server@10.38.0:
     resolution: {integrity: sha512-uMjWTMhqOPVmdiqPFOYwsdQ6Vzy8FtRcgM+ld3OrHsD88NiwZ1BWNIC6KwffjgrgLG/uKBFzNNKntLryv0NamQ==}
+    dev: false
+
+  /@trpc/server@10.38.1:
+    resolution: {integrity: sha512-59mM0Jk3cnWBExSv4Z4cw/776MPwa+rcVNywnV5gyHyK/p5qHtis1b1JPYdTEQZ0zhR+6zeto14rTR51hg+Nuw==}
     dev: false
 
   /@trpc/server@9.16.0:

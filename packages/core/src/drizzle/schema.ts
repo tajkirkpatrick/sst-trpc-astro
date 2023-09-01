@@ -1,13 +1,6 @@
 // Schema Delcaration
 import { ulid } from "ulid";
-import {
-  pgTable,
-  serial,
-  text,
-  bigint,
-  varchar,
-  boolean,
-} from "drizzle-orm/pg-core";
+import { pgTable, text, bigint, varchar } from "drizzle-orm/pg-core";
 
 export const customUsersTable = pgTable("users", {
   id: varchar("id")
@@ -16,8 +9,8 @@ export const customUsersTable = pgTable("users", {
   fullName: text("fullName"),
 });
 
-export type User = typeof customUsersTable.$inferSelect; // return type when queried
-export type NewUser = typeof customUsersTable.$inferInsert; // insert type
+export type User = typeof customUsersTable.$inferSelect;
+export type NewUser = typeof customUsersTable.$inferInsert;
 
 export const usersTable = pgTable("auth_user", {
   id: varchar("id", {

@@ -1,11 +1,7 @@
-import { NewUser } from "./../../../core/src/drizzle/schema";
 import { TRPCError, initTRPC } from "@trpc/server";
 import * as z from "zod";
 
-import {
-  type NewUser,
-  customUsersTable,
-} from "../../../core/src/drizzle/schema";
+import { type NewUser, customUsersTable } from "@/drizzle/schema";
 import { Context } from "./context";
 
 /**
