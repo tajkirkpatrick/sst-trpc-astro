@@ -10,9 +10,7 @@ import { db } from "@/drizzle";
  * Always available in your resolvers.
  */
 interface CreateInnerContextOptions
-  extends Partial<CreateAWSLambdaContextOptions<APIGatewayProxyEventV2>> {
-  db: typeof db | null;
-}
+  extends CreateAWSLambdaContextOptions<APIGatewayProxyEventV2> {}
 
 /**
  * Inner context. Will always be available in your procedures, in contrast to the outer context.
@@ -38,6 +36,7 @@ export async function createContext({
   event,
   context,
 }: CreateAWSLambdaContextOptions<APIGatewayProxyEventV2>) {
+  // if ever you pass something into createContextInner it must have the types defined in CreateInnerContextOptions and it must be returned from createContextInner from the opts parameter
   const contextInner = await createContextInner();
   return {
     ...contextInner,

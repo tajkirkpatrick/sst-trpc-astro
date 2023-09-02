@@ -4,6 +4,11 @@ import { pgTable, text, bigint, varchar } from "drizzle-orm/pg-core";
 
 const USER_ID_LENGTH = 26; // change this when using custom user ids
 
+// Lucia Auth tables
+
+/**
+ * `users` table of the AWS Aurora database
+ */
 export const usersTable = pgTable("users", {
   id: varchar("id", {
     length: USER_ID_LENGTH,
@@ -18,6 +23,9 @@ export const usersTable = pgTable("users", {
 export type User = typeof usersTable.$inferSelect;
 export type NewUser = Omit<typeof usersTable.$inferInsert, "id">;
 
+/**
+ * `auth_sessions` table of the AWS Aurora database
+ */
 export const sessionsTable = pgTable("auth_sessions", {
   id: varchar("id", {
     length: 128,
@@ -35,6 +43,9 @@ export const sessionsTable = pgTable("auth_sessions", {
   }).notNull(),
 });
 
+/**
+ * `auth_keys` table of the AWS Aurora database
+ */
 export const keysTable = pgTable("auth_keys", {
   id: varchar("id", {
     length: 255,

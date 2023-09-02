@@ -1,24 +1,14 @@
 // src/lib/lucia.ts
 import { lucia } from "lucia";
 import { astro } from "lucia/middleware";
-import { pg } from "@lucia-auth/adapter-postgresql";
-import { Pool } from "pg";
+import { db } from "../../../core/src/drizzle";
 
-const pool = new Pool({
-  connectionString: `postgres://newuser:newpassword@${import.meta.env.DB_URL}/${
-    import.meta.env.DB_TABLE
-  }`,
-});
+import { customAdapter } from "./lucia/adapter";
 
-// expect error
 export const auth = lucia({
   env: import.meta.env.DEV ? "DEV" : "PROD",
   middleware: astro(),
-  adapter: pg(pool, {
-    user: "users",
-    session: "auth_sessions",
-    key: "auth_keys",
-  }),
+  adapter: customAdapter(db),
 });
 
 export type Auth = typeof auth;

@@ -20,5 +20,8 @@
     "pg": "^8.11.3",
     "sst": "^2.24.16",
     "tailwindcss": "3.0.24"
+  },
+  "devDependencies": {
+    "drizzle-orm": "^0.28.5"
   }
 }
