@@ -72,38 +72,6 @@ export function SQLiteDrizzleAdapter(
     });
   };
 
-  // @ts-ignore
-  function renameKeysSessions(records) {
-    // @ts-ignore
-    return records.map((record) => {
-      return {
-        ...record,
-        active_expires: record.activeExpires,
-        idle_expires: record.idleExpires,
-        user_id: record.userId,
-        // remove old keys
-        activeExpires: undefined,
-        idleExpires: undefined,
-        userId: undefined,
-      };
-    });
-  }
-
-  // @ts-ignore
-  function renameKeysKeys(records) {
-    // @ts-ignore
-    return records.map((record) => {
-      return {
-        ...record,
-        hashed_password: record.hashedPassword,
-        user_id: record.userId,
-        // remove old keys
-        hashedPassword: undefined,
-        userId: undefined,
-      };
-    });
-  }
-
   return (luciaError) => {
     return {
       // getSessionAndUser: async (sessionId) => {
@@ -188,7 +156,12 @@ export function SQLiteDrizzleAdapter(
           .where(eq(session.userId, userId))
           .then((res) => res ?? []);
 
-        const resultRecords = renameKeysSessions(records);
+        const resultRecords = records.map((record) => ({
+          id: record.id!,
+          active_expires: Number(record.activeExpires),
+          idle_expires: Number(record.idleExpires),
+          user_id: record.userId!,
+        }));
 
         return resultRecords;
       },
@@ -248,7 +221,13 @@ export function SQLiteDrizzleAdapter(
           .where(eq(key.userId, userId))
           .then((res) => res ?? []);
 
-        const resultRecords = renameKeysKeys(records);
+        const resultRecords = records.map((record) => {
+          return {
+            hashed_password: record.hashedPassword!,
+            user_id: record.userId!,
+            id: record.id!,
+          };
+        });
 
         return resultRecords;
       },

@@ -7,13 +7,7 @@ import {
   bigint,
 } from "drizzle-orm/mysql-core";
 
-import type {
-  Adapter,
-  InitializeAdapter,
-  KeySchema,
-  LuciaError,
-  UserSchema,
-} from "lucia";
+import type { Adapter, InitializeAdapter, KeySchema, UserSchema } from "lucia";
 import type { myDrizzleError } from "../adapter";
 
 export function createTables(
@@ -90,19 +84,19 @@ export function mySqlDrizzleAdapter(
     });
   };
 
-  return (luciaError: typeof LuciaError) => {
+  return (luciaError) => {
     return {
-      getSessionAndUser: async (sessionId) => {
-        const records = await client
-          .select()
-          .from(session)
-          .leftJoin(user, eq(session.userId, user.id))
-          .where(eq(session.id, sessionId))
-          // .leftJoin(user, eq(session.userId, user.id))
-          .then((res) => res ?? [null, null]);
+      // getSessionAndUser: async (sessionId) => {
+      //   const records = await client
+      //     .select()
+      //     .from(session)
+      //     .leftJoin(user, eq(session.userId, user.id))
+      //     .where(eq(session.id, sessionId))
+      //     // .leftJoin(user, eq(session.userId, user.id))
+      //     .then((res) => res ?? [null, null]);
 
-        return records;
-      },
+      //   return records;
+      // },
       getUser: async (userId: string) => {
         const record =
           (await client
@@ -160,7 +154,12 @@ export function mySqlDrizzleAdapter(
           .where(eq(session.id, sessionId))
           .then((res) => res[0] ?? null);
 
-        return record;
+        return {
+          id: record?.id!,
+          user_id: record?.userId!,
+          active_expires: record?.activeExpires!,
+          idle_expires: record?.idleExpires!,
+        };
       },
       getSessionsByUserId: async (userId) => {
         const records = await client
@@ -169,7 +168,14 @@ export function mySqlDrizzleAdapter(
           .where(eq(session.userId, userId))
           .then((res) => res ?? []);
 
-        return records;
+        const resultRecords = records.map((record) => ({
+          id: record.id!,
+          user_id: record.userId!,
+          active_expires: record.activeExpires!,
+          idle_expires: record.idleExpires!,
+        }));
+
+        return resultRecords;
       },
       setSession: async (sessionData) => {
         try {
@@ -214,7 +220,11 @@ export function mySqlDrizzleAdapter(
           .where(eq(key.id, keyId))
           .then((res) => res[0] ?? null);
 
-        return record;
+        return {
+          id: record?.id!,
+          user_id: record?.userId!,
+          hashed_password: record?.hashedPassword!,
+        };
       },
       getKeysByUserId: async (userId) => {
         const records = await client
@@ -223,7 +233,13 @@ export function mySqlDrizzleAdapter(
           .where(eq(key.userId, userId))
           .then((res) => res ?? []);
 
-        return records;
+        const resultRecords = records.map((record) => ({
+          id: record.id!,
+          user_id: record.userId!,
+          hashed_password: record.hashedPassword!,
+        }));
+
+        return resultRecords;
       },
       setKey: async (keyData) => {
         try {

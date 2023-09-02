@@ -1,11 +1,5 @@
 import { eq } from "drizzle-orm";
-import type {
-  Adapter,
-  InitializeAdapter,
-  KeySchema,
-  LuciaError,
-  UserSchema,
-} from "lucia";
+import type { Adapter, InitializeAdapter, KeySchema, UserSchema } from "lucia";
 import {
   pgTable as defaultPgTableFn,
   PgTableFn,
@@ -90,19 +84,19 @@ export function pgDrizzleAdapter(
     });
   };
 
-  return (luciaError: typeof LuciaError) => {
+  return (luciaError) => {
     return {
-      getSessionAndUser: async (sessionId) => {
-        const records = await client
-          .select()
-          .from(session)
-          .leftJoin(user, eq(session.userId, user.id))
-          .where(eq(session.id, sessionId))
-          // .leftJoin(user, eq(session.userId, user.id))
-          .then((res) => res ?? [null, null]);
+      // getSessionAndUser: async (sessionId) => {
+      //   const records = await client
+      //     .select()
+      //     .from(session)
+      //     .leftJoin(user, eq(session.userId, user.id))
+      //     .where(eq(session.id, sessionId))
+      //     // .leftJoin(user, eq(session.userId, user.id))
+      //     .then((res) => res ?? [null, null]);
 
-        return records;
-      },
+      //   return records;
+      // },
       getUser: async (userId: string) => {
         const record =
           (await client
@@ -160,7 +154,12 @@ export function pgDrizzleAdapter(
           .where(eq(session.id, sessionId))
           .then((res) => res[0] ?? null);
 
-        return record;
+        return {
+          id: record?.id!,
+          active_expires: record?.activeExpires!,
+          idle_expires: record?.idleExpires!,
+          user_id: record?.userId!,
+        };
       },
       getSessionsByUserId: async (userId) => {
         const records = await client
@@ -169,7 +168,14 @@ export function pgDrizzleAdapter(
           .where(eq(session.userId, userId))
           .then((res) => res ?? []);
 
-        return records;
+        const resultRecords = records.map((record) => ({
+          id: record.id!,
+          active_expires: record.activeExpires!,
+          idle_expires: record.idleExpires!,
+          user_id: record.userId!,
+        }));
+
+        return resultRecords;
       },
       setSession: async (sessionData) => {
         try {
@@ -214,7 +220,11 @@ export function pgDrizzleAdapter(
           .where(eq(key.id, keyId))
           .then((res) => res[0] ?? null);
 
-        return record;
+        return {
+          id: record?.id!,
+          hashed_password: record?.hashedPassword!,
+          user_id: record?.userId!,
+        };
       },
       getKeysByUserId: async (userId) => {
         const records = await client
@@ -223,7 +233,13 @@ export function pgDrizzleAdapter(
           .where(eq(key.userId, userId))
           .then((res) => res ?? []);
 
-        return records;
+        const resultRecords = records.map((record) => ({
+          id: record.id!,
+          hashed_password: record.hashedPassword!,
+          user_id: record.userId!,
+        }));
+
+        return resultRecords;
       },
       setKey: async (keyData) => {
         try {
