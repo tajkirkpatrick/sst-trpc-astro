@@ -21,10 +21,12 @@ export function API({ stack }: StackContext) {
 
   const site = new AstroSite(stack, "AstroSite", {
     path: "packages/web",
+    bind: [pgDb],
     environment: {
       PUBLIC_TRPC_URL: api.url,
-      DB_URL: pgDb.clusterEndpoint.socketAddress,
-      DB_TABLE: pgDb.defaultDatabaseName,
+      DB_NAME: pgDb.defaultDatabaseName,
+      DB_SECRET_ARN: pgDb.secretArn,
+      DB_ARN: pgDb.clusterArn,
     },
   });
 

@@ -16,7 +16,7 @@ export const usersTable = pgTable("users", {
     .primaryKey()
     .$defaultFn(() => ulid()),
   // other user attributes
-  fullName: text("full_name"),
+  username: text("username"),
 });
 
 // Now, you can apply this helper to your type

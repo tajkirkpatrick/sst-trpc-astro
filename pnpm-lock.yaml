@@ -108,7 +108,13 @@ importers:
       tailwindcss:
         specifier: 3.0.24
         version: 3.0.24(postcss@8.4.28)
+      ulid:
+        specifier: ^2.3.0
+        version: 2.3.0
     devDependencies:
+      '@aws-sdk/client-rds-data':
+        specifier: ^3.398.0
+        version: 3.398.0
       drizzle-orm:
         specifier: ^0.28.5
         version: 0.28.5(@aws-sdk/client-rds-data@3.398.0)(@types/pg@8.10.2)(kysely@0.25.0)(pg@8.11.3)
