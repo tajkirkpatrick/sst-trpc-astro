@@ -6,6 +6,19 @@ interface Props {
 }
 
 const { title } = Astro.props;
+
+const session = await Astro.locals.auth.validate();
+console.log("session", JSON.stringify(session, null, 2));
+console.log("Auth Token", Astro.request.headers.get("Authorization"));
+
+const isLoggedIn = session ? true : false;
+console.log("isLoggedIn", isLoggedIn);
+
+if (!Astro.request.headers.get("Authorization") && !isLoggedIn) {
+  // for each header log both its name and value
+  // prefix each name and value with a label
+  console.log(Astro.request.headers);
+}
 ---
 
 <!DOCTYPE html>
@@ -20,5 +33,20 @@ const { title } = Astro.props;
   </head>
   <body>
     <slot />
+    <nav>
+      <ul>
+        <li>
+          <a href="/signup">Create An Accouont</a>
+        </li>
+        <li>
+          <a href="/login">Sign In</a>
+        </li>
+        <li>
+          <form method="post" action="/logout">
+            <button type="submit" value="Sign out">Sign Out</button>
+          </form>
+        </li>
+      </ul>
+    </nav>
   </body>
 </html>

@@ -6,9 +6,12 @@ import {
   MySqlDatabase,
   bigint,
 } from "drizzle-orm/mysql-core";
+import { ulid } from "ulid";
 
 import type { Adapter, InitializeAdapter, KeySchema, UserSchema } from "lucia";
 import type { myDrizzleError } from "../adapter";
+
+export const USER_ID_LENGTH = 26;
 
 export function createTables(
   mySqlTable: MySqlTableFn,
@@ -20,9 +23,12 @@ export function createTables(
 ) {
   const user = mySqlTable(modelNames.user, {
     id: varchar("id", {
-      length: 15, // change this when using custom user ids
-    }).primaryKey(),
+      length: USER_ID_LENGTH, // change this when using custom user ids
+    })
+      .primaryKey()
+      .$defaultFn(() => ulid()),
     // other user attributes
+    username: varchar("username", { length: 255 }),
   });
 
   const key = mySqlTable(modelNames.key, {
@@ -70,19 +76,19 @@ export function mySqlDrizzleAdapter(
 ): InitializeAdapter<Adapter> {
   const { user, key, session } = createTables(tableFn, modelNames);
 
-  const $transaction = <_Query extends (...args: any) => any>(
-    query: _Query
-  ): void => {
-    client.transaction(async (trx) => {
-      try {
-        const result = await query(trx)();
-        return result;
-      } catch (e) {
-        trx.rollback();
-        throw e;
-      }
-    });
-  };
+  // const $transaction = <_Query extends (...args: any) => any>(
+  //   query: _Query
+  // ): void => {
+  //   client.transaction(async (trx) => {
+  //     try {
+  //       const result = await query(trx)();
+  //       return result;
+  //     } catch (e) {
+  //       trx.rollback();
+  //       throw e;
+  //     }
+  //   });
+  // };
 
   return (luciaError) => {
     return {
@@ -105,7 +111,7 @@ export function mySqlDrizzleAdapter(
             .where(eq(user.id, userId))
             .then((res) => res[0])) ?? null;
 
-        return record;
+        return { id: record?.id!, username: record?.username! };
       },
       setUser: async (userData: UserSchema, keyData: KeySchema | null) => {
         if (!keyData) {
@@ -113,16 +119,16 @@ export function mySqlDrizzleAdapter(
           return;
         }
         try {
-          $transaction(async () => {
-            await client.insert(user).values({ ...userData, id: userData.id });
+          // $transaction(async () => {
+          await client.insert(user).values({ ...userData, id: userData.id });
 
-            const { hashed_password, user_id, ...restKeyData } = keyData;
+          const { hashed_password, user_id, ...restKeyData } = keyData;
 
-            await client.insert(key).values({
-              ...restKeyData,
-              hashedPassword: hashed_password,
-              userId: user_id,
-            });
+          await client.insert(key).values({
+            ...restKeyData,
+            hashedPassword: hashed_password,
+            userId: user_id,
+            // });
           });
         } catch (e) {
           const error = e as Partial<myDrizzleError>;

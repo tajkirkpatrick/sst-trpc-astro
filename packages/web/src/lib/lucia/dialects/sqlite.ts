@@ -1,3 +1,4 @@
+import { ulid } from "ulid";
 import { eq } from "drizzle-orm";
 import {
   sqliteTable as defaultSqliteTableFn,
@@ -19,8 +20,11 @@ export function createTables(
   }
 ) {
   const user = sqliteTable(modelNames.user, {
-    id: text("id").primaryKey(),
+    id: text("id")
+      .primaryKey()
+      .$defaultFn(() => ulid()),
     // other user attributes
+    username: text("username"),
   });
 
   const session = sqliteTable(modelNames.session ?? "user_session", {
@@ -58,19 +62,19 @@ export function SQLiteDrizzleAdapter(
 ): InitializeAdapter<Adapter> {
   const { user, key, session } = createTables(tableFn, modelNames);
 
-  const $transaction = <_Query extends (...args: any) => any>(
-    query: _Query
-  ): void => {
-    client.transaction(async (trx) => {
-      try {
-        const result = await query(trx)();
-        return result;
-      } catch (e) {
-        trx.rollback();
-        throw e;
-      }
-    });
-  };
+  // const $transaction = <_Query extends (...args: any) => any>(
+  //   query: _Query
+  // ): void => {
+  //   client.transaction(async (trx) => {
+  //     try {
+  //       const result = await query(trx)();
+  //       return result;
+  //     } catch (e) {
+  //       trx.rollback();
+  //       throw e;
+  //     }
+  //   });
+  // };
 
   return (luciaError) => {
     return {
@@ -93,7 +97,7 @@ export function SQLiteDrizzleAdapter(
             .where(eq(user.id, userId))
             .then((res) => res[0])) ?? null;
 
-        return record;
+        return { id: record?.id!, username: record?.username! };
       },
       setUser: async (userData: UserSchema, keyData: KeySchema | null) => {
         if (!keyData) {
@@ -101,16 +105,16 @@ export function SQLiteDrizzleAdapter(
           return;
         }
         try {
-          $transaction(async () => {
-            await client.insert(user).values({ ...userData, id: userData.id });
+          // $transaction(async () => {
+          await client.insert(user).values({ ...userData, id: userData.id });
 
-            const { hashed_password, user_id, ...restKeyData } = keyData;
+          const { hashed_password, user_id, ...restKeyData } = keyData;
 
-            await client.insert(key).values({
-              ...restKeyData,
-              hashedPassword: hashed_password,
-              userId: user_id,
-            });
+          await client.insert(key).values({
+            ...restKeyData,
+            hashedPassword: hashed_password,
+            userId: user_id,
+            // });
           });
         } catch (e) {
           const error = e as Partial<myDrizzleError>;

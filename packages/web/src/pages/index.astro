@@ -21,6 +21,7 @@ import Layout from "../layouts/Layout.astro";
 </Layout>
 
 <script>
+  import type { PostCreateOutput } from "../../../core/src/trpc/config/router";
   import { trpcClient } from "../lib/trpc";
 
   const greeting = document.getElementById("greeting")!;
@@ -38,9 +39,7 @@ import Layout from "../layouts/Layout.astro";
     console.log("fetching...");
     btn.disabled = true;
     btn.innerHTML = "Loading...";
-    const [resp] = await trpcClient.createRecord.mutate({
-      name: name.value,
-    });
+    const [resp] = await trpcClient.createRecord.mutate();
     console.log("fetch complete.");
     btn.disabled = false;
     btn.innerHTML = "Click Me";
