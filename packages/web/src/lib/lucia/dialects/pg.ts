@@ -110,7 +110,9 @@ export function pgDrizzleAdapter(
             .where(eq(user.id, userId))
             .then((res) => res[0])) ?? null;
 
-        return { id: record?.id!, username: record?.username! };
+        if (!record) return null;
+
+        return { id: record.id, username: record.username! };
       },
       setUser: async (userData: UserSchema, keyData: KeySchema | null) => {
         if (!keyData) {

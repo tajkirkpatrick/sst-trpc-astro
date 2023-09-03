@@ -6,9 +6,7 @@ import type { APIRoute } from "astro";
 export const post: APIRoute = async (context) => {
   const session = await context.locals.auth.validate();
   if (!session) {
-    return new Response("Unauthorized", {
-      status: 401,
-    });
+    return context.redirect("/", 302);
   }
   // make sure to invalidate the current session!
   await auth.invalidateSession(session.sessionId);
