@@ -13,13 +13,13 @@ async function up(db) {
     --> statement-breakpoint
     CREATE TABLE IF NOT EXISTS "auth_keys" (
       "id" varchar(255) PRIMARY KEY NOT NULL,
-      "user_id" varchar(15) NOT NULL,
+      "user_id" varchar(26) NOT NULL,
       "hashed_password" varchar(255)
     );
     --> statement-breakpoint
     CREATE TABLE IF NOT EXISTS "auth_sessions" (
       "id" varchar(128) PRIMARY KEY NOT NULL,
-      "user_id" varchar(15) NOT NULL,
+      "user_id" varchar(26) NOT NULL,
       "active_expires" bigint NOT NULL,
       "idle_expires" bigint NOT NULL
     );
