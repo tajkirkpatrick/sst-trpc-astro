@@ -2,7 +2,7 @@ import { eq } from "drizzle-orm";
 import {
   mysqlTable as defaultMySqlTableFn,
   varchar,
-  MySqlTableFn,
+  type MySqlTableFn,
   MySqlDatabase,
   bigint,
 } from "drizzle-orm/mysql-core";

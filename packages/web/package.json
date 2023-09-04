@@ -23,6 +23,7 @@
   },
   "devDependencies": {
     "@aws-sdk/client-rds-data": "^3.405.0",
-    "drizzle-orm": "^0.28.5"
+    "drizzle-orm": "^0.28.5",
+    "sst-trpc-astro": "workspace:../core/"
   }
 }

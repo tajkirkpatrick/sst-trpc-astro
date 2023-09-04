@@ -2,15 +2,15 @@ import { eq } from "drizzle-orm";
 import type { Adapter, InitializeAdapter, KeySchema, UserSchema } from "lucia";
 import {
   pgTable as defaultPgTableFn,
-  PgTableFn,
+  type PgTableFn,
   PgDatabase,
   varchar,
   bigint,
 } from "drizzle-orm/pg-core";
 import { ulid } from "ulid";
+import * as schema from "sst-trpc-astro/src/drizzle/schema";
 
 import type { myDrizzleError } from "../adapter";
-import { USER_ID_LENGTH } from "./mysql";
 
 export function createTables(
   pgTable: PgTableFn,
@@ -20,46 +20,50 @@ export function createTables(
     key: string;
   }
 ) {
-  const user = pgTable(modelNames.user, {
-    id: varchar("id", {
-      length: USER_ID_LENGTH, // change this when using custom user ids
-    })
-      .primaryKey()
-      .$defaultFn(() => ulid()),
-    // other user attributes
-    username: varchar("username"),
-  });
+  const user = schema.usersTable;
 
-  const session = pgTable(modelNames.session ?? "user_session", {
-    id: varchar("id", {
-      length: 128,
-    }).primaryKey(),
-    userId: varchar("user_id", {
-      length: 15,
-    })
-      .notNull()
-      .references(() => user.id),
-    activeExpires: bigint("active_expires", {
-      mode: "number",
-    }).notNull(),
-    idleExpires: bigint("idle_expires", {
-      mode: "number",
-    }).notNull(),
-  });
+  // const user = pgTable(modelNames.user, {
+  //   id: varchar("id", {
+  //     length: USER_ID_LENGTH, // change this when using custom user ids
+  //   })
+  //     .primaryKey()
+  //     .$defaultFn(() => ulid()),
+  //   // other user attributes
+  //   username: varchar("username"),
+  // });
 
-  const key = pgTable(modelNames.key, {
-    id: varchar("id", {
-      length: 255,
-    }).primaryKey(),
-    userId: varchar("user_id", {
-      length: 15,
-    })
-      .notNull()
-      .references(() => user.id),
-    hashedPassword: varchar("hashed_password", {
-      length: 255,
-    }),
-  });
+  const session = schema.sessionsTable;
+  // const session = pgTable(modelNames.session ?? "user_session", {
+  //   id: varchar("id", {
+  //     length: 128,
+  //   }).primaryKey(),
+  //   userId: varchar("user_id", {
+  //     length: USER_ID_LENGTH,
+  //   })
+  //     .notNull()
+  //     .references(() => user.id),
+  //   activeExpires: bigint("active_expires", {
+  //     mode: "number",
+  //   }).notNull(),
+  //   idleExpires: bigint("idle_expires", {
+  //     mode: "number",
+  //   }).notNull(),
+  // });
+
+  const key = schema.keysTable;
+  // const key = pgTable(modelNames.key, {
+  //   id: varchar("id", {
+  //     length: 255,
+  //   }).primaryKey(),
+  //   userId: varchar("user_id", {
+  //     length: USER_ID_LENGTH,
+  //   })
+  //     .notNull()
+  //     .references(() => user.id),
+  //   hashedPassword: varchar("hashed_password", {
+  //     length: 255,
+  //   }),
+  // });
 
   return { session, user, key };
 }
@@ -74,20 +78,6 @@ export function pgDrizzleAdapter(
   }
 ): InitializeAdapter<Adapter> {
   const { user, key, session } = createTables(tableFn, modelNames);
-
-  // const $transaction = <_Query extends (...args: any) => any>(
-  //   query: _Query
-  // ): void => {
-  //   client.transaction(async (trx) => {
-  //     try {
-  //       const result = await query(trx)();
-  //       return result;
-  //     } catch (e) {
-  //       trx.rollback();
-  //       throw e;
-  //     }
-  //   });
-  // };
 
   return (luciaError) => {
     return {
@@ -132,6 +122,10 @@ export function pgDrizzleAdapter(
             // });
           });
         } catch (e) {
+          await client
+            .delete(user)
+            .where(eq(user.id, userData.id))
+            .catch(() => {});
           const error = e as Partial<myDrizzleError>;
           if (error.message?.includes("`id`"))
             throw new luciaError("AUTH_DUPLICATE_KEY_ID");
@@ -188,6 +182,7 @@ export function pgDrizzleAdapter(
         try {
           const { active_expires, idle_expires, user_id, ...restSessionData } =
             sessionData;
+
           await client.insert(session).values({
             ...restSessionData,
             activeExpires: active_expires,

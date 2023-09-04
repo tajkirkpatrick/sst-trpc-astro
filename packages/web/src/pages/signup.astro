@@ -2,6 +2,7 @@
 // src/pages/signup.astro
 import Layout from "@/layouts/Layout.astro";
 import { auth } from "../lib/lucia";
+import { ulid } from "ulid";
 
 let errorMessage: string | null = null;
 
@@ -22,6 +23,7 @@ if (Astro.request.method === "POST") {
   if (validUsername && validPassword) {
     try {
       const user = await auth.createUser({
+        userId: ulid(),
         key: {
           providerId: "username", // auth method
           providerUserId: username.toLowerCase(), // unique id when using "username" auth method
@@ -44,13 +46,9 @@ if (Astro.request.method === "POST") {
     } catch (e) {
       // this part depends on the database you're using
       // check for unique constraint error in user table
-      if (e) {
-        errorMessage = "Username already taken";
-        console.log(errorMessage);
-      } else {
-        errorMessage = "An unknown error occurred";
-        console.log(errorMessage);
-      }
+      errorMessage = "Something went wrong";
+      console.log(errorMessage);
+      console.log(e);
     }
   } else {
     errorMessage = "Invalid input";

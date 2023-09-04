@@ -34,6 +34,9 @@ export type myDrizzleError = InstanceType<typeof DrizzleError>;
 export function customAdapter<SqlFlavor extends SqlFlavorOptions>(
   db: SqlFlavor,
   modelNames?: {
+    // user: InstanceType<typeof Table>;
+    // session: InstanceType<typeof Table>;
+    // key: InstanceType<typeof Table>;
     user: string;
     session: string | null;
     key: string;

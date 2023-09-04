@@ -115,6 +115,9 @@ importers:
       drizzle-orm:
         specifier: ^0.28.5
         version: 0.28.5(@aws-sdk/client-rds-data@3.405.0)(@types/pg@8.10.2)(kysely@0.25.0)
+      sst-trpc-astro:
+        specifier: workspace:../core/
+        version: link:../core
 
 packages:
 
