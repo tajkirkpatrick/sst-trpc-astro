@@ -2,7 +2,7 @@
 import { ulid } from "ulid";
 import { pgTable, text, bigint, varchar } from "drizzle-orm/pg-core";
 
-const USER_ID_LENGTH = 26; // change this when using custom user ids
+import { USER_ID_LENGTH } from "./constants";
 
 // Lucia Auth tables
 
@@ -31,7 +31,7 @@ export const sessionsTable = pgTable("auth_sessions", {
     length: 128,
   }).primaryKey(),
   userId: varchar("user_id", {
-    length: 15,
+    length: USER_ID_LENGTH,
   })
     .notNull()
     .references(() => usersTable.id),
@@ -51,7 +51,7 @@ export const keysTable = pgTable("auth_keys", {
     length: 255,
   }).primaryKey(),
   userId: varchar("user_id", {
-    length: 15,
+    length: USER_ID_LENGTH,
   })
     .notNull()
     .references(() => usersTable.id),
