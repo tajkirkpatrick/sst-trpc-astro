@@ -46,8 +46,7 @@ if (Astro.request.method === "POST") {
     } catch (e) {
       // this part depends on the database you're using
       // check for unique constraint error in user table
-      errorMessage = "Something went wrong";
-      console.log(errorMessage);
+      console.log("Something went wrong");
       console.log(e);
     }
   } else {

@@ -113,10 +113,10 @@ export function pgDrizzleAdapter(
           // $transaction(async () => {
           await client.insert(user).values({ ...userData, id: userData.id });
 
-          const { hashed_password, user_id, ...restKeyData } = keyData;
+          const { hashed_password, user_id, id } = keyData;
 
           await client.insert(key).values({
-            ...restKeyData,
+            id: id,
             hashedPassword: hashed_password,
             userId: user_id,
             // });
@@ -245,9 +245,11 @@ export function pgDrizzleAdapter(
       },
       setKey: async (keyData) => {
         try {
-          await client
-            .insert(key)
-            .values({ ...keyData, userId: keyData.user_id });
+          await client.insert(key).values({
+            id: keyData.id,
+            hashedPassword: keyData.hashed_password,
+            userId: keyData.user_id,
+          });
         } catch (e) {
           const error = e as Partial<myDrizzleError>;
           if (error.message?.includes("`id`"))
