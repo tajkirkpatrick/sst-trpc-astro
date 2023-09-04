@@ -1,70 +1,14 @@
 import { eq } from "drizzle-orm";
-import type { Adapter, InitializeAdapter, KeySchema, UserSchema } from "lucia";
-import {
-  pgTable as defaultPgTableFn,
-  type PgTableFn,
-  PgDatabase,
-  varchar,
-  bigint,
-} from "drizzle-orm/pg-core";
-import { ulid } from "ulid";
+import { pgTable as defaultPgTableFn, PgDatabase } from "drizzle-orm/pg-core";
 import * as schema from "sst-trpc-astro/src/drizzle/schema";
+import type { Adapter, InitializeAdapter, KeySchema, UserSchema } from "lucia";
 
 import type { myDrizzleError } from "../adapter";
 
-export function createTables(
-  pgTable: PgTableFn,
-  modelNames: {
-    user: string;
-    session: string | null;
-    key: string;
-  }
-) {
+export function createTables() {
   const user = schema.usersTable;
-
-  // const user = pgTable(modelNames.user, {
-  //   id: varchar("id", {
-  //     length: USER_ID_LENGTH, // change this when using custom user ids
-  //   })
-  //     .primaryKey()
-  //     .$defaultFn(() => ulid()),
-  //   // other user attributes
-  //   username: varchar("username"),
-  // });
-
   const session = schema.sessionsTable;
-  // const session = pgTable(modelNames.session ?? "user_session", {
-  //   id: varchar("id", {
-  //     length: 128,
-  //   }).primaryKey(),
-  //   userId: varchar("user_id", {
-  //     length: USER_ID_LENGTH,
-  //   })
-  //     .notNull()
-  //     .references(() => user.id),
-  //   activeExpires: bigint("active_expires", {
-  //     mode: "number",
-  //   }).notNull(),
-  //   idleExpires: bigint("idle_expires", {
-  //     mode: "number",
-  //   }).notNull(),
-  // });
-
   const key = schema.keysTable;
-  // const key = pgTable(modelNames.key, {
-  //   id: varchar("id", {
-  //     length: 255,
-  //   }).primaryKey(),
-  //   userId: varchar("user_id", {
-  //     length: USER_ID_LENGTH,
-  //   })
-  //     .notNull()
-  //     .references(() => user.id),
-  //   hashedPassword: varchar("hashed_password", {
-  //     length: 255,
-  //   }),
-  // });
-
   return { session, user, key };
 }
 
@@ -77,7 +21,7 @@ export function pgDrizzleAdapter(
     key: string;
   }
 ): InitializeAdapter<Adapter> {
-  const { user, key, session } = createTables(tableFn, modelNames);
+  const { user, key, session } = createTables();
 
   return (luciaError) => {
     return {
@@ -110,22 +54,23 @@ export function pgDrizzleAdapter(
           return;
         }
         try {
-          // $transaction(async () => {
-          await client.insert(user).values({ ...userData, id: userData.id });
+          await client.transaction(async (trx) => {
+            try {
+              await trx.insert(user).values({ ...userData, id: userData.id });
 
-          const { hashed_password, user_id, id } = keyData;
+              const { hashed_password, user_id, id } = keyData;
 
-          await client.insert(key).values({
-            id: id,
-            hashedPassword: hashed_password,
-            userId: user_id,
-            // });
+              await trx.insert(key).values({
+                id: id,
+                hashedPassword: hashed_password,
+                userId: user_id,
+              });
+            } catch {
+              trx.rollback();
+              throw new Error("Failed to create user");
+            }
           });
         } catch (e) {
-          await client
-            .delete(user)
-            .where(eq(user.id, userData.id))
-            .catch(() => {});
           const error = e as Partial<myDrizzleError>;
           if (error.message?.includes("`id`"))
             throw new luciaError("AUTH_DUPLICATE_KEY_ID");
