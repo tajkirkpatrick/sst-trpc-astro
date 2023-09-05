@@ -4,7 +4,7 @@ import aws from "astro-sst/lambda";
 
 // https://astro.build/config
 export default defineConfig({
-  integrations: [tailwind({ applyBaseStyles: true })],
+  integrations: [tailwind({ applyBaseStyles: false })],
   output: "server",
   adapters: aws(),
 });

@@ -1,4 +1,3 @@
-// src/middleware.ts
 import { auth } from "@/lib/lucia";
 import type { MiddlewareResponseHandler } from "astro";
 
