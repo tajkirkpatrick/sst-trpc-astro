@@ -1,11 +1,18 @@
 ---
 import "@/styles/globals.css";
+import "@fontsource/inter";
+import Nav from "@/components/Nav.astro";
 
 interface Props {
   title: string;
 }
 
 const { title } = Astro.props;
+
+const session = await Astro.locals.auth.validate();
+const isLoggedIn = !!session;
+
+console.log("isLoggedIn", isLoggedIn);
 ---
 
 <!doctype html>
@@ -19,15 +26,13 @@ const { title } = Astro.props;
     <title>{title}</title>
   </head>
   <body>
+    <Nav />
     <slot />
     <nav>
       <ul class="list-none flex gap-x-4">
         <li><a href="/">Home</a></li>
         <li>
           <a href="/signup">Create An Account</a>
-        </li>
-        <li>
-          <a href="/login">Sign In</a>
         </li>
         <li>
           <form method="post" action="/logout">
@@ -38,3 +43,9 @@ const { title } = Astro.props;
     </nav>
   </body>
 </html>
+
+<style>
+  * {
+    font-family: "Inter", sans-serif;
+  }
+</style>
