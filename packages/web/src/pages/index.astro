@@ -1,5 +1,6 @@
 ---
 import Layout from "../layouts/Layout.astro";
+import Welcome from "@/components/Welcome";
 
 const session = await Astro.locals.auth.validate();
 console.log(session);
@@ -7,6 +8,7 @@ console.log(session);
 
 <Layout title="Welcome to Astro.">
   <main>
+    <Welcome />
     <h1 id="greeting">
       Welcome {
         session ? JSON.stringify(session.user, null, 2) + "!" : "Unknown User"
