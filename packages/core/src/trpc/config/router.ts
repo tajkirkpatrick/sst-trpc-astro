@@ -41,6 +41,7 @@ export const appRouter = router({
       return new TRPCError({
         code: "INTERNAL_SERVER_ERROR",
         message: "Something went wrong retrieving records from the database.",
+        cause: err,
       });
     }
   }),

@@ -9,10 +9,12 @@ interface Props {
 
 const { title } = Astro.props;
 
-const session = await Astro.locals.auth.validate();
-const isLoggedIn = !!session;
+let session = await Astro.locals.auth.validate();
 
+const isLoggedIn = !!session;
 console.log("isLoggedIn", isLoggedIn);
+console.log("session ID from session obj: ", session?.sessionId ?? null);
+console.log("session ID from Astro request: ", Astro.request.headers.get("authorization"));
 ---
 
 <!doctype html>

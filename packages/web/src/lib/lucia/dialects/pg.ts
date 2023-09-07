@@ -50,26 +50,25 @@ export function pgDrizzleAdapter(
       },
       setUser: async (userData: UserSchema, keyData: KeySchema | null) => {
         if (!keyData) {
-          await client.insert(user).values({ ...userData, id: userData.id });
+          await client.insert(user).values({ username: userData.username, id: userData.id });
           return;
         }
         try {
           await client.transaction(async (trx) => {
             try {
-              await trx.insert(user).values({ ...userData, id: userData.id });
-
-              const { hashed_password, user_id, id } = keyData;
-
+              await trx.insert(user).values({ username: userData.username, id: userData.id });
               await trx.insert(key).values({
-                id: id,
-                hashedPassword: hashed_password,
-                userId: user_id,
+                id: keyData.id,
+                hashedPassword: keyData.hashed_password,
+                userId: keyData.user_id,
               });
+              return;
             } catch {
               trx.rollback();
-              throw new Error("Failed to create user");
+              throw new Error("Failed to create user, transaction failed.");
             }
           });
+          return;
         } catch (e) {
           const error = e as Partial<myDrizzleError>;
           if (error.message?.includes("`id`"))
