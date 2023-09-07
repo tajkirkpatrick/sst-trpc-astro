@@ -7,7 +7,7 @@ export function API({ stack }: StackContext) {
     migrations: "packages/core/migrations",
   });
 
-  const trpc = new Api(stack, "api", {
+  const api = new Api(stack, "api", {
     defaults: {
       function: {
         bind: [pgDb],
@@ -21,15 +21,17 @@ export function API({ stack }: StackContext) {
 
   const site = new AstroSite(stack, "AstroSite", {
     path: "packages/web",
+    bind: [pgDb],
     environment: {
-      PUBLIC_TRPC_URL: trpc.url,
-      DB_URL: pgDb.clusterEndpoint.socketAddress,
-      DB_TABLE: pgDb.defaultDatabaseName,
+      PUBLIC_TRPC_URL: api.url,
+      DB_NAME: pgDb.defaultDatabaseName,
+      DB_SECRET_ARN: pgDb.secretArn,
+      DB_ARN: pgDb.clusterArn,
     },
   });
 
   stack.addOutputs({
-    ApiEndpoint: trpc.url,
+    ApiEndpoint: api.url,
     site: site.url,
   });
 }
