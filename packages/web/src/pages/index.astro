@@ -1,10 +1,17 @@
 ---
 import Layout from "../layouts/Layout.astro";
+
+const session = await Astro.locals.auth.validate();
+console.log(session);
 ---
 
 <Layout title="Welcome to Astro.">
   <main>
-    <h1 id="greeting">Welcome!</h1>
+    <h1 id="greeting">
+      Welcome {
+        session ? JSON.stringify(session.user, null, 2) + "!" : "Unknown User"
+      }
+    </h1>
     <!-- style the input using tailwind css with a gray border and a ring on focus -->
     <input
       type="text"
@@ -38,9 +45,7 @@ import Layout from "../layouts/Layout.astro";
     console.log("fetching...");
     btn.disabled = true;
     btn.innerHTML = "Loading...";
-    const [resp] = await trpcClient.createRecord.mutate({
-      name: name.value,
-    });
+    const [resp] = await trpcClient.createRecord.mutate();
     console.log("fetch complete.");
     btn.disabled = false;
     btn.innerHTML = "Click Me";

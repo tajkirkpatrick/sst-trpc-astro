@@ -1,0 +1,71 @@
+---
+// src/pages/signup.astro
+import Layout from "@/layouts/Layout.astro";
+import { auth } from "../lib/lucia";
+import { ulid } from "ulid";
+
+let errorMessage: string | null = null;
+
+// check for form submissions
+if (Astro.request.method === "POST") {
+  const formData = await Astro.request.formData();
+  const username = formData.get("username");
+  const password = formData.get("password");
+  // basic check
+  const validUsername =
+    typeof username === "string" &&
+    username.length >= 2 &&
+    username.length <= 31;
+  const validPassword =
+    typeof password === "string" &&
+    password.length >= 2 &&
+    password.length <= 255;
+  if (validUsername && validPassword) {
+    try {
+      const user = await auth.createUser({
+        userId: ulid(),
+        key: {
+          providerId: "username", // auth method
+          providerUserId: username.toLowerCase(), // unique id when using "username" auth method
+          password, // hashed by Lucia
+        },
+        attributes: {
+          username,
+        },
+      });
+      const session = await auth.createSession({
+        userId: user.userId,
+        attributes: {},
+      });
+      Astro.locals.auth.setSession(session); // set session cookie
+      Astro.response.headers.set(
+        "Authorization",
+        `Bearer ${session.sessionId}`
+      ); // set Authorization header
+      return Astro.redirect("/", 302); // redirect to profile page
+    } catch (e) {
+      // this part depends on the database you're using
+      // check for unique constraint error in user table
+      console.log("Something went wrong");
+      console.log(e);
+    }
+  } else {
+    errorMessage = "Invalid input";
+    console.log(errorMessage);
+  }
+}
+
+const session = await Astro.locals.auth.validate();
+if (session) return Astro.redirect("/profile", 302);
+---
+
+<Layout title="Signup">
+  <h1>Sign up</h1>
+  <form method="POST">
+    <label for="username">Username</label>
+    <input name="username" id="username" /><br />
+    <label for="password">Password</label>
+    <input type="password" name="password" id="password" /><br />
+    <input type="submit" />
+  </form>
+</Layout>

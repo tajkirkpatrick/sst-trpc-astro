@@ -1,12 +1,24 @@
-import { TRPCError, initTRPC } from "@trpc/server";
+import {
+  TRPCError,
+  inferRouterInputs,
+  inferRouterOutputs,
+  initTRPC,
+} from "@trpc/server";
 import * as z from "zod";
 import { toZod } from "tozod";
 
 import { usersTable, type NewUser } from "@/drizzle/schema";
 import { Context } from "./context";
 
+type RouterInput = inferRouterInputs<AppRouter>;
+type RouterOutput = inferRouterOutputs<AppRouter>;
+
+type PostCreateInput = RouterInput["createRecord"];
+export type PostCreateOutput = RouterOutput["createRecord"];
+
+// @ts-ignore
 const insertUserSchema: toZod<NewUser> = z.object({
-  fullName: z.string().min(1).optional(),
+  username: z.string().min(1),
 });
 
 /**
@@ -37,7 +49,7 @@ export const appRouter = router({
     .mutation(async ({ input, ctx }) => {
       try {
         // check if input.fullName is null or undefined
-        if (!input.fullName) {
+        if (!input.username) {
           return new TRPCError({
             code: "BAD_REQUEST",
             cause: new Error("input.fullName is null or undefined"),
@@ -47,7 +59,7 @@ export const appRouter = router({
 
         const newRecord = await ctx.db
           .insert(usersTable)
-          .values({ fullName: input.fullName })
+          .values({ username: input.username })
           .returning();
 
         if (newRecord.length === 0) {
