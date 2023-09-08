@@ -50,13 +50,17 @@ export function pgDrizzleAdapter(
       },
       setUser: async (userData: UserSchema, keyData: KeySchema | null) => {
         if (!keyData) {
-          await client.insert(user).values({ username: userData.username, id: userData.id });
+          await client
+            .insert(user)
+            .values({ username: userData.username, id: userData.id });
           return;
         }
         try {
           await client.transaction(async (trx) => {
             try {
-              await trx.insert(user).values({ username: userData.username, id: userData.id });
+              await trx
+                .insert(user)
+                .values({ username: userData.username, id: userData.id });
               await trx.insert(key).values({
                 id: keyData.id,
                 hashedPassword: keyData.hashed_password,

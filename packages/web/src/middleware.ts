@@ -6,7 +6,15 @@ export const onRequest: MiddlewareResponseHandler = async (context, next) => {
   const session = await auth.handleRequest(context).validate();
 
   if (session) {
-    context.request.headers.set("Authorization", `Bearer ${session.sessionId}`);
+    try {
+      context.request.headers.set(
+        "Authorization",
+        `Bearer ${session.sessionId}`
+      );
+    } catch (e) {
+      console.error(e);
+      context.request.headers.set("Authorization", "");
+    }
   }
 
   return await next();

@@ -10,5 +10,12 @@
     "@types/node": "^20.5.6",
     "sst": "^2.24.16",
     "vitest": "^0.34.3"
+  },
+  "dependencies": {
+    "@trpc/server": "^10.38.1",
+    "@types/aws-lambda": "^8.10.119",
+    "tozod": "^3.0.0",
+    "zod": "^3.22.2",
+    "sst-trpc-astro": "workspace:../"
   }
 }

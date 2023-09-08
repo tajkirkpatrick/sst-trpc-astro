@@ -29,28 +29,16 @@ importers:
       '@aws-sdk/client-rds-data':
         specifier: ^3.398.0
         version: 3.398.0
-      '@trpc/server':
-        specifier: ^10.38.1
-        version: 10.38.1
       drizzle-orm:
         specifier: ^0.28.5
         version: 0.28.5(@aws-sdk/client-rds-data@3.398.0)(kysely@0.26.3)
       kysely:
         specifier: ^0.26.3
         version: 0.26.3
-      tozod:
-        specifier: ^3.0.0
-        version: 3.0.0(zod@3.22.2)
       ulid:
         specifier: ^2.3.0
         version: 2.3.0
-      zod:
-        specifier: ^3.22.2
-        version: 3.22.2
     devDependencies:
-      '@types/aws-lambda':
-        specifier: ^8.10.119
-        version: 8.10.119
       '@types/node':
         specifier: ^20.5.6
         version: 20.5.6
@@ -65,6 +53,22 @@ importers:
         version: 0.34.3
 
   packages/functions:
+    dependencies:
+      '@trpc/server':
+        specifier: ^10.38.1
+        version: 10.38.1
+      '@types/aws-lambda':
+        specifier: ^8.10.119
+        version: 8.10.119
+      sst-trpc-astro:
+        specifier: workspace:../
+        version: link:..
+      tozod:
+        specifier: ^3.0.0
+        version: 3.0.0(zod@3.22.2)
+      zod:
+        specifier: ^3.22.2
+        version: 3.22.2
     devDependencies:
       '@types/node':
         specifier: ^20.5.6
@@ -3249,7 +3253,7 @@ packages:
 
   /@types/aws-lambda@8.10.119:
     resolution: {integrity: sha512-Vqm22aZrCvCd6I5g1SvpW151jfqwTzEZ7XJ3yZ6xaZG31nUEOEyzzVImjRcsN8Wi/QyPxId/x8GTtgIbsy8kEw==}
-    dev: true
+    dev: false
 
   /@types/babel__core@7.20.1:
     resolution: {integrity: sha512-aACu/U/omhdk15O4Nfb+fHgH/z3QsfQzpnvRZhYhThms83ZnAOZz7zZAWO7mn2yyNQaA4xTO8GLK3uqFU4bYYw==}

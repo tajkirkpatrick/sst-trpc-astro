@@ -2,7 +2,7 @@ import { APIGatewayProxyEventV2 } from "aws-lambda";
 import { inferAsyncReturnType } from "@trpc/server";
 import { CreateAWSLambdaContextOptions } from "@trpc/server/adapters/aws-lambda";
 
-import { db } from "@/drizzle";
+import { db } from "@my-sst-app/core/drizzle/";
 
 /**
  * Defines your inner context shape.
@@ -22,6 +22,16 @@ interface CreateInnerContextOptions
  * @see https://trpc.io/docs/context#inner-and-outer-context
  */
 export async function createContextInner(opts?: CreateInnerContextOptions) {
+  async function getUserFromHeader() {
+    if (opts?.event.headers?.authorization) {
+      const sessionId = opts.event.headers.authorization.split(" ")[1];
+      console.log("sessionId", sessionId);
+      return sessionId;
+    }
+    return null;
+  }
+  const user = await getUserFromHeader();
+
   return {
     db,
   };
@@ -37,7 +47,7 @@ export async function createContext({
   context,
 }: CreateAWSLambdaContextOptions<APIGatewayProxyEventV2>) {
   // if ever you pass something into createContextInner it must have the types defined in CreateInnerContextOptions and it must be returned from createContextInner from the opts parameter
-  const contextInner = await createContextInner();
+  const contextInner = await createContextInner({ event, context });
   return {
     ...contextInner,
     event,

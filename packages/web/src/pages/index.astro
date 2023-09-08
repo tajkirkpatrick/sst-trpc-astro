@@ -1,5 +1,6 @@
 ---
-import Layout from "../layouts/Layout.astro";
+import Layout from "@/layouts/Layout.astro";
+import { Button } from "@/components/ui/button";
 
 const session = await Astro.locals.auth.validate();
 ---
@@ -23,6 +24,7 @@ const session = await Astro.locals.auth.validate();
     >
       Click Me
     </button>
+    <Button id="trpc">Call TRPC</Button>
   </main>
 </Layout>
 
@@ -30,6 +32,16 @@ const session = await Astro.locals.auth.validate();
   import { trpcClient } from "../lib/trpc";
 
   const greeting = document.getElementById("greeting")!;
+
+  const testBtn = document.getElementById("trpc") as HTMLButtonElement;
+  testBtn.onclick = async () => {
+    try {
+      await trpcClient.getRecords.query();
+      console.log("completed");
+    } catch (e) {
+      console.log(e);
+    }
+  };
 
   const btn = document.getElementById("btn") as HTMLButtonElement;
   btn.onclick = async () => {

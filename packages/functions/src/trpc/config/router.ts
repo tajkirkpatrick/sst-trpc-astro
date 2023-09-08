@@ -7,7 +7,7 @@ import {
 import * as z from "zod";
 import { toZod } from "tozod";
 
-import { usersTable, type NewUser } from "@/drizzle/schema";
+import { usersTable, type NewUser } from "@my-sst-app/core/drizzle/schema";
 import { Context } from "./context";
 
 type RouterInput = inferRouterInputs<AppRouter>;

@@ -8,7 +8,6 @@
     "generate": "drizzle-kit generate:pg --schema=./src/drizzle/schema.ts --out=./src/drizzle/out/"
   },
   "devDependencies": {
-    "@types/aws-lambda": "^8.10.119",
     "@types/node": "^20.5.6",
     "drizzle-kit": "^0.19.13",
     "sst": "^2.24.16",
@@ -16,11 +15,8 @@
   },
   "dependencies": {
     "@aws-sdk/client-rds-data": "^3.398.0",
-    "@trpc/server": "^10.38.1",
     "drizzle-orm": "^0.28.5",
     "kysely": "^0.26.3",
-    "tozod": "^3.0.0",
-    "ulid": "^2.3.0",
-    "zod": "^3.22.2"
+    "ulid": "^2.3.0"
   }
 }

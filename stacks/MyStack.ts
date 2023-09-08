@@ -14,8 +14,8 @@ export function API({ stack }: StackContext) {
       },
     },
     routes: {
-      "GET /api/trpc/{proxy+}": "packages/core/src/trpc/server.handler",
-      "POST /api/trpc/{proxy+}": "packages/core/src/trpc/server.handler",
+      "GET /api/trpc/{proxy+}": "packages/functions/src/trpc/server.handler",
+      "POST /api/trpc/{proxy+}": "packages/functions/src/trpc/server.handler",
     },
   });
 
