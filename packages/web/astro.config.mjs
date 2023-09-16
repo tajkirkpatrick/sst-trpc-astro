@@ -8,4 +8,7 @@ export default defineConfig({
   integrations: [tailwind({ applyBaseStyles: false }), react()],
   output: "server",
   adapters: aws(),
+  vite: {
+    optimizeDeps: ["sst"],
+  },
 });

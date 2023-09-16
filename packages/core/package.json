@@ -10,8 +10,9 @@
   "devDependencies": {
     "@types/node": "^20.5.6",
     "drizzle-kit": "^0.19.13",
-    "sst": "^2.24.16",
-    "vitest": "^0.34.3"
+    "sst": "2.25.2",
+    "vitest": "^0.34.3",
+    "@tsconfig/node18": "^18.2.2"
   },
   "dependencies": {
     "@aws-sdk/client-rds-data": "^3.398.0",
