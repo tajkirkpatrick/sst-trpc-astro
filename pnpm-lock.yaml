@@ -19,7 +19,7 @@ importers:
         version: 10.2.69
       sst:
         specifier: 2.25.2
-        version: 2.25.2(@types/react@18.2.21)
+        version: 2.25.2(@types/react@18.2.21)(pg@8.11.3)
       typescript:
         specifier: ^5.2.2
         version: 5.2.2
@@ -31,10 +31,13 @@ importers:
         version: 3.398.0
       drizzle-orm:
         specifier: ^0.28.5
-        version: 0.28.5(@aws-sdk/client-rds-data@3.398.0)(kysely@0.26.3)
+        version: 0.28.5(@aws-sdk/client-rds-data@3.398.0)(@types/pg@8.10.2)(kysely@0.26.3)(pg@8.11.3)
       kysely:
         specifier: ^0.26.3
         version: 0.26.3
+      pg:
+        specifier: ^8.11.3
+        version: 8.11.3
       ulid:
         specifier: ^2.3.0
         version: 2.3.0
@@ -45,12 +48,15 @@ importers:
       '@types/node':
         specifier: ^20.5.6
         version: 20.5.6
+      '@types/pg':
+        specifier: ^8.10.2
+        version: 8.10.2
       drizzle-kit:
         specifier: ^0.19.13
         version: 0.19.13
       sst:
         specifier: 2.25.2
-        version: 2.25.2(@types/react@18.2.21)
+        version: 2.25.2(@types/react@18.2.21)(pg@8.11.3)
       vitest:
         specifier: ^0.34.3
         version: 0.34.3
@@ -81,7 +87,7 @@ importers:
         version: 20.5.6
       sst:
         specifier: 2.25.2
-        version: 2.25.2(@types/react@18.2.21)
+        version: 2.25.2(@types/react@18.2.21)(pg@8.11.3)
       vitest:
         specifier: ^0.34.3
         version: 0.34.3
@@ -121,6 +127,9 @@ importers:
       lucide-react:
         specifier: ^0.274.0
         version: 0.274.0(react@18.2.0)
+      pg:
+        specifier: ^8.11.3
+        version: 8.11.3
       react:
         specifier: ^18.0.0
         version: 18.2.0
@@ -129,7 +138,7 @@ importers:
         version: 18.2.0(react@18.2.0)
       sst:
         specifier: 2.25.2
-        version: 2.25.2(@types/react@18.2.21)
+        version: 2.25.2(@types/react@18.2.21)(pg@8.11.3)
       tailwind-merge:
         specifier: ^1.14.0
         version: 1.14.0
@@ -146,15 +155,21 @@ importers:
       '@aws-sdk/client-rds-data':
         specifier: ^3.405.0
         version: 3.405.0
+      '@types/pg':
+        specifier: ^8.10.2
+        version: 8.10.2
       '@types/react':
         specifier: ^18.0.21
         version: 18.2.21
       '@types/react-dom':
         specifier: ^18.0.6
         version: 18.2.7
+      drizzle-kit:
+        specifier: ^0.19.13
+        version: 0.19.13
       drizzle-orm:
         specifier: ^0.28.5
-        version: 0.28.5(@aws-sdk/client-rds-data@3.405.0)(kysely@0.25.0)
+        version: 0.28.5(@aws-sdk/client-rds-data@3.405.0)(@types/pg@8.10.2)(kysely@0.25.0)(pg@8.11.3)
       sst-trpc-astro:
         specifier: workspace:../core/
         version: link:../core
@@ -3490,6 +3505,13 @@ packages:
     resolution: {integrity: sha512-SuT16Q1K51EAVPz1K29DJ/sXjhSQ0zjvsypYJ6tlwVsRV9jwW5Adq2ch8Dq8kDBCkYnELS7N7VNCSB5nC56t/g==}
     dev: false
 
+  /@types/pg@8.10.2:
+    resolution: {integrity: sha512-MKFs9P6nJ+LAeHLU3V0cODEOgyThJ3OAnmOlsZsxux6sfQs3HRXR5bBn7xG5DjckEFhTAxsXi7k7cd0pCMxpJw==}
+    dependencies:
+      '@types/node': 20.5.6
+      pg-protocol: 1.6.0
+      pg-types: 4.0.1
+
   /@types/prop-types@15.7.5:
     resolution: {integrity: sha512-JCB8C6SnDoQf0cNycqd/35A7MjcnK+ZTqE7judS6o7utxUCg6imJg3QK2qzHKszlTjcj2cn+NwMB2i96ubpj7w==}
 
@@ -4099,6 +4121,10 @@ packages:
   /buffer-from@1.1.2:
     resolution: {integrity: sha512-E+XQCRwSbaaiChtv6k6Dwgc+bx+Bs6vuKJHHl5kox/BaKbhiXzqQOwK4cO22yElGp2OCmjwVhT3HmxgyPGnJfQ==}
 
+  /buffer-writer@2.0.0:
+    resolution: {integrity: sha512-a7ZpuTZU1TRtnwyCNW3I5dc0wWNC3VR9S++Ewyk2HHZdrO3CQJqSpd+95Us590V6AL7JqUAH2IwZ/398PmNFgw==}
+    engines: {node: '>=4'}
+
   /buffer@4.9.2:
     resolution: {integrity: sha512-xq+q3SRMOxGivLhBNaUdC64hDTQwejJ+H0T/NB1XMtTVEwNTrfFF3gAxiyW0Bu/xWEGhjVKgUcMhCrUy2+uCWg==}
     dependencies:
@@ -4663,7 +4689,7 @@ packages:
       - supports-color
     dev: true
 
-  /drizzle-orm@0.28.5(@aws-sdk/client-rds-data@3.398.0)(kysely@0.26.3):
+  /drizzle-orm@0.28.5(@aws-sdk/client-rds-data@3.398.0)(@types/pg@8.10.2)(kysely@0.26.3)(pg@8.11.3):
     resolution: {integrity: sha512-6r6Iw4c38NAmW6TiKH3TUpGUQ1YdlEoLJOQptn8XPx3Z63+vFNKfAiANqrIiYZiMjKR9+NYAL219nFrmo1duXA==}
     peerDependencies:
       '@aws-sdk/client-rds-data': '>=3'
@@ -4726,10 +4752,12 @@ packages:
         optional: true
     dependencies:
       '@aws-sdk/client-rds-data': 3.398.0
+      '@types/pg': 8.10.2
       kysely: 0.26.3
+      pg: 8.11.3
     dev: false
 
-  /drizzle-orm@0.28.5(@aws-sdk/client-rds-data@3.405.0)(kysely@0.25.0):
+  /drizzle-orm@0.28.5(@aws-sdk/client-rds-data@3.405.0)(@types/pg@8.10.2)(kysely@0.25.0)(pg@8.11.3):
     resolution: {integrity: sha512-6r6Iw4c38NAmW6TiKH3TUpGUQ1YdlEoLJOQptn8XPx3Z63+vFNKfAiANqrIiYZiMjKR9+NYAL219nFrmo1duXA==}
     peerDependencies:
       '@aws-sdk/client-rds-data': '>=3'
@@ -4792,7 +4820,9 @@ packages:
         optional: true
     dependencies:
       '@aws-sdk/client-rds-data': 3.405.0
+      '@types/pg': 8.10.2
       kysely: 0.25.0
+      pg: 8.11.3
     dev: true
 
   /dset@3.1.2:
@@ -5896,7 +5926,7 @@ packages:
     engines: {node: '>=6'}
     dev: false
 
-  /kysely-codegen@0.10.1(kysely@0.25.0):
+  /kysely-codegen@0.10.1(kysely@0.25.0)(pg@8.11.3):
     resolution: {integrity: sha512-8Bslh952gN5gtucRv4jTZDFD18RBioS6M50zHfe5kwb5iSyEAunU4ZYMdHzkHraa4zxjg5/183XlOryBCXLRIw==}
     hasBin: true
     peerDependencies:
@@ -5917,6 +5947,7 @@ packages:
       kysely: 0.25.0
       micromatch: 4.0.5
       minimist: 1.2.8
+      pg: 8.11.3
 
   /kysely-data-api@0.2.1(@aws-sdk/client-rds-data@3.405.0)(kysely@0.25.0):
     resolution: {integrity: sha512-KmASvF1gmjVqyU9WOUXhCQlv29ofR+xc2DhjaIomz1+Bjd/VtR2/3g4ZuXwG1L4lWGKxMuo5iOvK3XyPbB4LdQ==}
@@ -6802,6 +6833,9 @@ packages:
   /obliterator@2.0.4:
     resolution: {integrity: sha512-lgHwxlxV1qIg1Eap7LgIeoBWIMFibOjbrYPIPJZcI1mmGAI2m3lNYpK12Y+GBdPQ0U1hRwSord7GIaawz962qQ==}
 
+  /obuf@1.1.2:
+    resolution: {integrity: sha512-PX1wu0AmAdPqOL1mWhqmlOd8kOIZQwGZw6rh7uby9fTc5lhaOWFLX3I6R1hrF9k3zUY40e6igsLGkDXK92LJNg==}
+
   /oidc-token-hash@5.0.3:
     resolution: {integrity: sha512-IF4PcGgzAr6XXSff26Sk/+P4KZFJVuHAJZj3wgO3vX2bMdNVp/QXTP3P7CEm9V1IdG8lDLY3HhiqpsE/nOwpPw==}
     engines: {node: ^10.13.0 || >=12.0.0}
@@ -6910,6 +6944,9 @@ packages:
     resolution: {integrity: sha512-R4nPAVTAU0B9D35/Gk3uJf/7XYbQcyohSKdvAxIRSNghFl4e71hVoGnBNQz9cWaXxO2I10KTC+3jMdvvoKw6dQ==}
     engines: {node: '>=6'}
 
+  /packet-reader@1.0.0:
+    resolution: {integrity: sha512-HAKu/fG3HpHFO0AA8WE8q2g+gBJaZ9MG7fcKk+IJPLTGAD6Psw4443l+9DGRbOIh3/aXr7Phy0TjilYivJo5XQ==}
+
   /parse-latin@5.0.1:
     resolution: {integrity: sha512-b/K8ExXaWC9t34kKeDV8kGXBkXZ1HCSAZRYE7HR14eA1GlXX5L8iWhs8USJNhQU9q5ci413jCKF0gOyovvyRBg==}
     dependencies:
@@ -6970,6 +7007,78 @@ packages:
   /pathval@1.1.1:
     resolution: {integrity: sha512-Dp6zGqpTdETdR63lehJYPeIOqpiNBNtc7BpWSLrOje7UaIsE5aY92r/AunQA7rsXvet3lrJ3JnZX29UPTKXyKQ==}
     dev: true
+
+  /pg-cloudflare@1.1.1:
+    resolution: {integrity: sha512-xWPagP/4B6BgFO+EKz3JONXv3YDgvkbVrGw2mTo3D6tVDQRh1e7cqVGvyR3BE+eQgAvx1XhW/iEASj4/jCWl3Q==}
+    requiresBuild: true
+    optional: true
+
+  /pg-connection-string@2.6.2:
+    resolution: {integrity: sha512-ch6OwaeaPYcova4kKZ15sbJ2hKb/VP48ZD2gE7i1J+L4MspCtBMAx8nMgz7bksc7IojCIIWuEhHibSMFH8m8oA==}
+
+  /pg-int8@1.0.1:
+    resolution: {integrity: sha512-WCtabS6t3c8SkpDBUlb1kjOs7l66xsGdKpIPZsg4wR+B3+u9UAum2odSsF9tnvxg80h4ZxLWMy4pRjOsFIqQpw==}
+    engines: {node: '>=4.0.0'}
+
+  /pg-numeric@1.0.2:
+    resolution: {integrity: sha512-BM/Thnrw5jm2kKLE5uJkXqqExRUY/toLHda65XgFTBTFYZyopbKjBe29Ii3RbkvlsMoFwD+tHeGaCjjv0gHlyw==}
+    engines: {node: '>=4'}
+
+  /pg-pool@3.6.1(pg@8.11.3):
+    resolution: {integrity: sha512-jizsIzhkIitxCGfPRzJn1ZdcosIt3pz9Sh3V01fm1vZnbnCMgmGl5wvGGdNN2EL9Rmb0EcFoCkixH4Pu+sP9Og==}
+    peerDependencies:
+      pg: '>=8.0'
+    dependencies:
+      pg: 8.11.3
+
+  /pg-protocol@1.6.0:
+    resolution: {integrity: sha512-M+PDm637OY5WM307051+bsDia5Xej6d9IR4GwJse1qA1DIhiKlksvrneZOYQq42OM+spubpcNYEo2FcKQrDk+Q==}
+
+  /pg-types@2.2.0:
+    resolution: {integrity: sha512-qTAAlrEsl8s4OiEQY69wDvcMIdQN6wdz5ojQiOy6YRMuynxenON0O5oCpJI6lshc6scgAY8qvJ2On/p+CXY0GA==}
+    engines: {node: '>=4'}
+    dependencies:
+      pg-int8: 1.0.1
+      postgres-array: 2.0.0
+      postgres-bytea: 1.0.0
+      postgres-date: 1.0.7
+      postgres-interval: 1.2.0
+
+  /pg-types@4.0.1:
+    resolution: {integrity: sha512-hRCSDuLII9/LE3smys1hRHcu5QGcLs9ggT7I/TCs0IE+2Eesxi9+9RWAAwZ0yaGjxoWICF/YHLOEjydGujoJ+g==}
+    engines: {node: '>=10'}
+    dependencies:
+      pg-int8: 1.0.1
+      pg-numeric: 1.0.2
+      postgres-array: 3.0.2
+      postgres-bytea: 3.0.0
+      postgres-date: 2.0.1
+      postgres-interval: 3.0.0
+      postgres-range: 1.1.3
+
+  /pg@8.11.3:
+    resolution: {integrity: sha512-+9iuvG8QfaaUrrph+kpF24cXkH1YOOUeArRNYIxq1viYHZagBxrTno7cecY1Fa44tJeZvaoG+Djpkc3JwehN5g==}
+    engines: {node: '>= 8.0.0'}
+    peerDependencies:
+      pg-native: '>=3.0.1'
+    peerDependenciesMeta:
+      pg-native:
+        optional: true
+    dependencies:
+      buffer-writer: 2.0.0
+      packet-reader: 1.0.0
+      pg-connection-string: 2.6.2
+      pg-pool: 3.6.1(pg@8.11.3)
+      pg-protocol: 1.6.0
+      pg-types: 2.2.0
+      pgpass: 1.0.5
+    optionalDependencies:
+      pg-cloudflare: 1.1.1
+
+  /pgpass@1.0.5:
+    resolution: {integrity: sha512-FdW9r/jQZhSeohs1Z3sI1yxFQNFvMcnmfuj4WBMUTxOrAyLMaTcE1aAMBiTlbMNaXvBCQuVi0R7hd8udDSP7ug==}
+    dependencies:
+      split2: 4.2.0
 
   /picocolors@1.0.0:
     resolution: {integrity: sha512-1fygroTLlHu66zi26VoTDv8yRgm0Fccecssto+MhsZ0D/DGW2sm8E8AjW7NU5VVTRt5GxbeZ5qBuJr+HyLYkjQ==}
@@ -7082,6 +7191,45 @@ packages:
       nanoid: 3.3.6
       picocolors: 1.0.0
       source-map-js: 1.0.2
+
+  /postgres-array@2.0.0:
+    resolution: {integrity: sha512-VpZrUqU5A69eQyW2c5CA1jtLecCsN2U/bD6VilrFDWq5+5UIEVO7nazS3TEcHf1zuPYO/sqGvUvW62g86RXZuA==}
+    engines: {node: '>=4'}
+
+  /postgres-array@3.0.2:
+    resolution: {integrity: sha512-6faShkdFugNQCLwucjPcY5ARoW1SlbnrZjmGl0IrrqewpvxvhSLHimCVzqeuULCbG0fQv7Dtk1yDbG3xv7Veog==}
+    engines: {node: '>=12'}
+
+  /postgres-bytea@1.0.0:
+    resolution: {integrity: sha512-xy3pmLuQqRBZBXDULy7KbaitYqLcmxigw14Q5sj8QBVLqEwXfeybIKVWiqAXTlcvdvb0+xkOtDbfQMOf4lST1w==}
+    engines: {node: '>=0.10.0'}
+
+  /postgres-bytea@3.0.0:
+    resolution: {integrity: sha512-CNd4jim9RFPkObHSjVHlVrxoVQXz7quwNFpz7RY1okNNme49+sVyiTvTRobiLV548Hx/hb1BG+iE7h9493WzFw==}
+    engines: {node: '>= 6'}
+    dependencies:
+      obuf: 1.1.2
+
+  /postgres-date@1.0.7:
+    resolution: {integrity: sha512-suDmjLVQg78nMK2UZ454hAG+OAW+HQPZ6n++TNDUX+L0+uUlLywnoxJKDou51Zm+zTCjrCl0Nq6J9C5hP9vK/Q==}
+    engines: {node: '>=0.10.0'}
+
+  /postgres-date@2.0.1:
+    resolution: {integrity: sha512-YtMKdsDt5Ojv1wQRvUhnyDJNSr2dGIC96mQVKz7xufp07nfuFONzdaowrMHjlAzY6GDLd4f+LUHHAAM1h4MdUw==}
+    engines: {node: '>=12'}
+
+  /postgres-interval@1.2.0:
+    resolution: {integrity: sha512-9ZhXKM/rw350N1ovuWHbGxnGh/SNJ4cnxHiM0rxE4VN41wsg8P8zWn9hv/buK00RP4WvlOyr/RBDiptyxVbkZQ==}
+    engines: {node: '>=0.10.0'}
+    dependencies:
+      xtend: 4.0.2
+
+  /postgres-interval@3.0.0:
+    resolution: {integrity: sha512-BSNDnbyZCXSxgA+1f5UU2GmwhoI0aU5yMxRGO8CdFEcY2BQF9xm/7MqKnYoM1nJDk8nONNWDk9WeSmePFhQdlw==}
+    engines: {node: '>=12'}
+
+  /postgres-range@1.1.3:
+    resolution: {integrity: sha512-VdlZoocy5lCP0c/t66xAfclglEapXPCIVhqqJRncYpvbCgImF0w67aPKfbqUMr72tO2k5q0TdTZwCLjPTI6C9g==}
 
   /prebuild-install@7.1.1:
     resolution: {integrity: sha512-jAXscXWMcCK8GgCoHOfIr0ODh5ai8mj63L2nWrjuAgXE6tDyYGnx4/8o/rCgU+B4JSyZBKbeZqzhtwtC3ovxjw==}
@@ -7719,6 +7867,10 @@ packages:
     dependencies:
       readable-stream: 3.6.2
 
+  /split2@4.2.0:
+    resolution: {integrity: sha512-UcjcJOWknrNkF6PLX83qcHM6KHgVKNkV62Y8a5uYDVv9ydGQVwAHMKqHdJje1VTWpljG0WYpCDhrCdAOYH4TWg==}
+    engines: {node: '>= 10.x'}
+
   /sprintf-js@1.0.3:
     resolution: {integrity: sha512-D9cPgkvLlV3t3IzL0D0YLvGA9Ahk4PcvVwUbN0dSGr1aP0Nrt4AEnTUbuGvquEC0mA64Gqt1fzirlRs5ibXx8g==}
     dev: false
@@ -7735,7 +7887,7 @@ packages:
     optionalDependencies:
       fsevents: 2.3.2
 
-  /sst@2.25.2(@types/react@18.2.21):
+  /sst@2.25.2(@types/react@18.2.21)(pg@8.11.3):
     resolution: {integrity: sha512-Eq63DfHp7KKRTvIEi0W4+1+vTr3dS+yTEZKoixgKvTAcgJVYvVwDyIcoKi/Y/kv+g122SD4LYGi7kyn7E6nxvA==}
     hasBin: true
     peerDependencies:
@@ -7799,7 +7951,7 @@ packages:
       ink: 4.4.0(@types/react@18.2.21)(react@18.2.0)
       ink-spinner: 5.0.0(ink@4.4.0)(react@18.2.0)
       kysely: 0.25.0
-      kysely-codegen: 0.10.1(kysely@0.25.0)
+      kysely-codegen: 0.10.1(kysely@0.25.0)(pg@8.11.3)
       kysely-data-api: 0.2.1(@aws-sdk/client-rds-data@3.405.0)(kysely@0.25.0)
       minimatch: 6.2.0
       openid-client: 5.4.3

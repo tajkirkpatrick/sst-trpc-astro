@@ -1,16 +1,16 @@
 import { StackContext, Api, AstroSite, RDS } from "sst/constructs";
 
 export function API({ stack }: StackContext) {
-  const pgDb = new RDS(stack, "Database", {
-    engine: "postgresql13.9",
-    defaultDatabaseName: "myDatabase",
-    migrations: "packages/core/migrations",
-  });
+  // const pgDb = new RDS(stack, "Database", {
+  //   engine: "postgresql13.9",
+  //   defaultDatabaseName: "myDatabase",
+  //   migrations: "packages/core/migrations",
+  // });
 
   const api = new Api(stack, "api", {
     defaults: {
       function: {
-        bind: [pgDb],
+        // bind: [pgDb],
       },
     },
     routes: {
@@ -21,12 +21,12 @@ export function API({ stack }: StackContext) {
 
   const site = new AstroSite(stack, "AstroSite", {
     path: "packages/web",
-    bind: [pgDb],
+    // bind: [pgDb],
     environment: {
       PUBLIC_TRPC_URL: api.url,
-      DB_NAME: pgDb.defaultDatabaseName,
-      DB_SECRET_ARN: pgDb.secretArn,
-      DB_ARN: pgDb.clusterArn,
+      // DB_NAME: pgDb.defaultDatabaseName,
+      // DB_SECRET_ARN: pgDb.secretArn,
+      // DB_ARN: pgDb.clusterArn,
     },
   });
 

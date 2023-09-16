@@ -21,6 +21,7 @@
     "clsx": "^2.0.0",
     "lucia": "^2.4.2",
     "lucide-react": "^0.274.0",
+    "pg": "^8.11.3",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
     "sst": "2.25.2",
@@ -31,8 +32,10 @@
   },
   "devDependencies": {
     "@aws-sdk/client-rds-data": "^3.405.0",
+    "@types/pg": "^8.10.2",
     "@types/react": "^18.0.21",
     "@types/react-dom": "^18.0.6",
+    "drizzle-kit": "^0.19.13",
     "drizzle-orm": "^0.28.5",
     "sst-trpc-astro": "workspace:../core/"
   }
