@@ -69,6 +69,9 @@ importers:
       '@types/aws-lambda':
         specifier: ^8.10.119
         version: 8.10.119
+      drizzle-orm:
+        specifier: ^0.28.5
+        version: 0.28.5(@aws-sdk/client-rds-data@3.405.0)(@types/pg@8.10.2)(kysely@0.25.0)(pg@8.11.3)
       sst-trpc-astro:
         specifier: workspace:../
         version: link:..
@@ -155,6 +158,9 @@ importers:
       '@aws-sdk/client-rds-data':
         specifier: ^3.405.0
         version: 3.405.0
+      '@my-sst-app':
+        specifier: workspace:../
+        version: link:..
       '@types/pg':
         specifier: ^8.10.2
         version: 8.10.2
@@ -4823,7 +4829,6 @@ packages:
       '@types/pg': 8.10.2
       kysely: 0.25.0
       pg: 8.11.3
-    dev: true
 
   /dset@3.1.2:
     resolution: {integrity: sha512-g/M9sqy3oHe477Ar4voQxWtaPIFw1jTdKZuomOjhCcBx9nHUNn0pu6NopuFFrTh/TRZIKEj+76vLWFu9BNKk+Q==}

@@ -3,8 +3,8 @@ import type { Adapter, InitializeAdapter } from "lucia";
 import { MySqlDatabase } from "drizzle-orm/mysql-core";
 import { PgDatabase } from "drizzle-orm/pg-core";
 import { BaseSQLiteDatabase } from "drizzle-orm/sqlite-core";
-import type { AnyMySqlTable, MySqlTableFn } from "drizzle-orm/mysql-core";
-import type { AnyPgTable, PgTableFn } from "drizzle-orm/pg-core";
+import type { MySqlTableFn } from "drizzle-orm/mysql-core";
+import type { PgTableFn } from "drizzle-orm/pg-core";
 import type { AnySQLiteTable, SQLiteTableFn } from "drizzle-orm/sqlite-core";
 import { DrizzleError, is } from "drizzle-orm";
 

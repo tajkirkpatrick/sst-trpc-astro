@@ -37,6 +37,7 @@
     "@types/react-dom": "^18.0.6",
     "drizzle-kit": "^0.19.13",
     "drizzle-orm": "^0.28.5",
-    "sst-trpc-astro": "workspace:../core/"
+    "sst-trpc-astro": "workspace:../core/",
+    "@my-sst-app": "workspace:../"
   }
 }

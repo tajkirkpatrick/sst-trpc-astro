@@ -1,7 +1,8 @@
 import { eq } from "drizzle-orm";
 import { pgTable as defaultPgTableFn, PgDatabase } from "drizzle-orm/pg-core";
-import * as schema from "sst-trpc-astro/src/drizzle/schema";
 import type { Adapter, InitializeAdapter, KeySchema, UserSchema } from "lucia";
+
+import * as schema from "@my-sst-app/core/src/drizzle/schema";
 
 import type { myDrizzleError } from "../adapter";
 

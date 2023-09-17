@@ -1,8 +1,10 @@
 import { APIGatewayProxyEventV2 } from "aws-lambda";
 import { inferAsyncReturnType } from "@trpc/server";
 import { CreateAWSLambdaContextOptions } from "@trpc/server/adapters/aws-lambda";
+import { eq } from "drizzle-orm";
 
 import { db } from "@my-sst-app/core/drizzle/";
+import { sessionsTable, type Session } from "@my-sst-app/core/drizzle/schema";
 
 /**
  * Defines your inner context shape.
@@ -10,7 +12,9 @@ import { db } from "@my-sst-app/core/drizzle/";
  * Always available in your resolvers.
  */
 interface CreateInnerContextOptions
-  extends CreateAWSLambdaContextOptions<APIGatewayProxyEventV2> {}
+  extends CreateAWSLambdaContextOptions<APIGatewayProxyEventV2> {
+  session: Session | null;
+}
 
 /**
  * Inner context. Will always be available in your procedures, in contrast to the outer context.
@@ -22,18 +26,9 @@ interface CreateInnerContextOptions
  * @see https://trpc.io/docs/context#inner-and-outer-context
  */
 export async function createContextInner(opts?: CreateInnerContextOptions) {
-  async function getUserFromHeader() {
-    if (opts?.event.headers?.authorization) {
-      const sessionId = opts.event.headers.authorization.split(" ")[1];
-      console.log("sessionId from tRPC: ", sessionId);
-      return sessionId;
-    }
-    return null;
-  }
-  const user = await getUserFromHeader();
-
   return {
     db,
+    session: opts?.session,
   };
 }
 
@@ -46,8 +41,24 @@ export async function createContext({
   event,
   context,
 }: CreateAWSLambdaContextOptions<APIGatewayProxyEventV2>) {
-  // if ever you pass something into createContextInner it must have the types defined in CreateInnerContextOptions and it must be returned from createContextInner from the opts parameter
-  const contextInner = await createContextInner({ event, context });
+  async function getSessionFromHeaders() {
+    if (event.headers?.authorization) {
+      const userSession = await db
+        .select()
+        .from(sessionsTable)
+        .where(eq(sessionsTable.id, event.headers.authorization.split(" ")[1]));
+
+      if (userSession.length === 0) return null;
+
+      return userSession[0];
+    }
+    return null;
+  }
+
+  const session = await getSessionFromHeaders();
+
+  const contextInner = await createContextInner({ context, event, session });
+
   return {
     ...contextInner,
     event,

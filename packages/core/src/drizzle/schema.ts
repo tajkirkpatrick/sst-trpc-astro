@@ -43,6 +43,8 @@ export const sessionsTable = pgTable("auth_sessions", {
   }).notNull(),
 });
 
+export type Session = typeof sessionsTable.$inferSelect;
+
 /**
  * `auth_keys` table of the AWS Aurora database
  */

@@ -29,10 +29,6 @@ const session = await Astro.locals.auth.validate();
 </Layout>
 
 <script>
-  alert("sessionID: " + localStorage.getItem("auth_session"))
-</script>
-
-<script>
   import { trpcClient } from "../lib/trpc";
 
   const greeting = document.getElementById("greeting")!;

@@ -7,16 +7,17 @@
     "typecheck": "tsc -noEmit"
   },
   "devDependencies": {
+    "@tsconfig/node18": "^18.2.2",
     "@types/node": "^20.5.6",
     "sst": "2.25.2",
-    "vitest": "^0.34.3",
-    "@tsconfig/node18": "^18.2.2"
+    "vitest": "^0.34.3"
   },
   "dependencies": {
     "@trpc/server": "^10.38.1",
     "@types/aws-lambda": "^8.10.119",
+    "drizzle-orm": "^0.28.5",
+    "sst-trpc-astro": "workspace:../",
     "tozod": "^3.0.0",
-    "zod": "^3.22.2",
-    "sst-trpc-astro": "workspace:../"
+    "zod": "^3.22.2"
   }
 }
