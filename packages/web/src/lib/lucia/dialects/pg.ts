@@ -25,23 +25,21 @@ interface SessionTable extends AnyPgTable {
   idleExpires: AnyPgColumn;
 }
 
-export function createTables(modelNames: {
+export function createTables(model: {
   schema: Record<string, unknown>;
   user: string;
   session: string | null;
   key: string;
 }) {
-  const user = modelNames.schema[modelNames.user] as UserTable;
-  const session = modelNames.schema[modelNames.session ?? ""] as
-    | SessionTable
-    | undefined;
-  const key = modelNames.schema[modelNames.key] as KeyTable;
+  const user = model.schema[model.user] as UserTable;
+  const session = model.schema[model.session ?? ""] as SessionTable | undefined;
+  const key = model.schema[model.key] as KeyTable;
   return { session, user, key };
 }
 
 export function pgDrizzleAdapter(
   client: InstanceType<typeof PgDatabase>,
-  modelNames: {
+  model: {
     user: string;
     session: string | null;
     key: string;
@@ -49,23 +47,43 @@ export function pgDrizzleAdapter(
   },
 ): InitializeAdapter<Adapter> {
   const { user, key, session } = createTables({
-    ...modelNames,
-    schema: modelNames.schema || {},
+    ...model,
+    schema: model.schema || {},
   });
 
   return (luciaError) => {
     return {
-      // getSessionAndUser: async (sessionId) => {
-      //   const records = await client
-      //     .select()
-      //     .from(session)
-      //     .leftJoin(user, eq(session.userId, user.id))
-      //     .where(eq(session.id, sessionId))
-      //     // .leftJoin(user, eq(session.userId, user.id))
-      //     .then((res) => res ?? [null, null]);
+      getSessionAndUser: async (sessionId: string) => {
+        if (!session) {
+          return [null, null];
+        }
 
-      //   return records;
-      // },
+        const sessionRecord = await client
+          .select()
+          .from(session)
+          .where(eq(session.id, sessionId))
+          .then((res) => res[0] ?? null);
+
+        if (!sessionRecord) {
+          return [null, null];
+        }
+
+        const userRecord = await client
+          .select()
+          .from(user)
+          .where(eq(user.id, sessionRecord.userId))
+          .then((res) => (res[0] as UserSchema) ?? null);
+
+        return [
+          {
+            id: sessionRecord.id as string,
+            active_expires: Number(sessionRecord.activeExpires),
+            idle_expires: Number(sessionRecord.idleExpires),
+            user_id: sessionRecord.userId as string,
+          },
+          userRecord,
+        ];
+      },
       getUser: async (userId: string) => {
         const record =
           (await client

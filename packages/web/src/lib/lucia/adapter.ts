@@ -1,7 +1,7 @@
 import type { Adapter, InitializeAdapter } from "lucia";
 
 import { MySqlDatabase } from "drizzle-orm/mysql-core";
-import { PgDatabase } from "drizzle-orm/pg-core";
+import { PgDatabase, PgTable } from "drizzle-orm/pg-core";
 import { BaseSQLiteDatabase } from "drizzle-orm/sqlite-core";
 import { DrizzleError, is } from "drizzle-orm";
 
@@ -22,14 +22,14 @@ export type myDrizzleError = InstanceType<typeof DrizzleError>;
 
 export function customAdapter<SqlFlavor extends SqlFlavorOptions>(
   db: SqlFlavor,
-  modelNames?: {
+  variableNames?: {
     user: string;
     session: string | null;
     key: string;
     schema: Record<string, unknown>;
   },
 ): InitializeAdapter<Adapter> {
-  const getModelNames = (
+  const getVariableNames = (
     user: string = "auth_users",
     session: string | null = "auth_session",
     key: string = "auth_keys",
@@ -38,7 +38,7 @@ export function customAdapter<SqlFlavor extends SqlFlavorOptions>(
     return { user, session, key, schema };
   };
 
-  modelNames = modelNames || getModelNames();
+  variableNames = variableNames || getVariableNames();
 
   if (is(db, MySqlDatabase)) {
     // ! currently disabled
@@ -46,7 +46,7 @@ export function customAdapter<SqlFlavor extends SqlFlavorOptions>(
     return mySqlDrizzleAdapter(db);
   } else if (is(db, PgDatabase)) {
     // * currently enabled
-    return pgDrizzleAdapter(db, modelNames);
+    return pgDrizzleAdapter(db, variableNames);
   } else if (is(db, BaseSQLiteDatabase)) {
     // ! currently disabled
     // return SQLiteDrizzleAdapter(db, table as SQLiteTableFn, modelNames);

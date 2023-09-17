@@ -6,9 +6,10 @@ import { LuciaError } from "lucia";
 
 // check for form submissions
 if (Astro.request.method === "POST") {
-  const formData = await Astro.request.formData();
-  const username = formData.get("username");
-  const password = formData.get("password");
+  const { username, password } = Object.fromEntries(
+    await Astro.request.formData(),
+  ) as Record<string, string>;
+
   // basic check
   const validUsername =
     typeof username === "string" &&
@@ -25,7 +26,7 @@ if (Astro.request.method === "POST") {
       const key = await auth.useKey(
         "username",
         username.toLowerCase(),
-        password
+        password,
       );
       const session = await auth.createSession({
         userId: key.userId,

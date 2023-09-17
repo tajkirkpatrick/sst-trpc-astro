@@ -16,11 +16,11 @@ const session = await Astro.locals.auth.validate();
     <input
       type="text"
       name="name"
-      class="border-2 border-gray-300 focus:ring-2 focus:ring-blue-500 h-8"
+      class="h-8 border-2 border-gray-300 focus:ring-2 focus:ring-blue-500"
     />
     <button
       id="btn"
-      class="border-2 border-black rounded-md py-2 px-4 bg-slate-500/20 disabled:bg-blue-500/50"
+      class="rounded-md border-2 border-black bg-slate-500/20 px-4 py-2 disabled:bg-blue-500/50"
     >
       Click Me
     </button>
@@ -36,6 +36,7 @@ const session = await Astro.locals.auth.validate();
   const testBtn = document.getElementById("trpc") as HTMLButtonElement;
   testBtn.onclick = async () => {
     try {
+      // @ts-ignore
       await trpcClient.getRecords.query();
       console.log("completed");
     } catch (e) {
