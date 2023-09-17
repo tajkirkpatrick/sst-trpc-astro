@@ -5,7 +5,8 @@
   "scripts": {
     "test": "sst bind vitest",
     "typecheck": "tsc -noEmit",
-    "generate": "drizzle-kit generate:pg --schema=./src/drizzle/schema.ts --out=./src/drizzle/out/"
+    "generate": "drizzle-kit generate:pg --schema=./src/drizzle/schema.ts --out=./src/drizzle/out/",
+    "studio": "drizzle-kit studio --host=127.0.0.1"
   },
   "devDependencies": {
     "@tsconfig/node18": "^18.2.2",

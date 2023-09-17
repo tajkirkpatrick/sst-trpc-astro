@@ -9,9 +9,6 @@ function getTokenFromHTML() {
   if (!sessionId) {
     return "Bearer Anonymous";
   }
-
-  console.log(`Bearer ${sessionId}`);
-
   return `Bearer ${sessionId}`;
 }
 
