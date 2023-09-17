@@ -1,8 +1,8 @@
 {
   "version": "5",
   "dialect": "pg",
-  "id": "34761aaa-fdf6-4797-b63b-0b6188c20e34",
-  "prevId": "7937bebd-c65a-4807-8843-f2e33459fd6e",
+  "id": "1392cec1-a601-4bdc-a499-991b2057e4df",
+  "prevId": "28be9355-abbf-48cc-ab7c-2ffe670e359a",
   "tables": {
     "auth_keys": {
       "name": "auth_keys",
@@ -16,7 +16,7 @@
         },
         "user_id": {
           "name": "user_id",
-          "type": "varchar(15)",
+          "type": "varchar(26)",
           "primaryKey": false,
           "notNull": true
         },
@@ -39,7 +39,7 @@
           "columnsTo": [
             "id"
           ],
-          "onDelete": "no action",
+          "onDelete": "cascade",
           "onUpdate": "no action"
         }
       },
@@ -58,7 +58,7 @@
         },
         "user_id": {
           "name": "user_id",
-          "type": "varchar(15)",
+          "type": "varchar(26)",
           "primaryKey": false,
           "notNull": true
         },
@@ -87,7 +87,7 @@
           "columnsTo": [
             "id"
           ],
-          "onDelete": "no action",
+          "onDelete": "cascade",
           "onUpdate": "no action"
         }
       },
@@ -104,9 +104,15 @@
           "primaryKey": true,
           "notNull": true
         },
-        "full_name": {
-          "name": "full_name",
+        "username": {
+          "name": "username",
           "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "date",
           "primaryKey": false,
           "notNull": false
         }
@@ -122,8 +128,6 @@
   "_meta": {
     "schemas": {},
     "tables": {},
-    "columns": {
-      "\"users\".\"fullName\"": "\"users\".\"full_name\""
-    }
+    "columns": {}
   }
 }

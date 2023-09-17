@@ -23,7 +23,7 @@ let session = await Astro.locals.auth.validate();
     <title>{title}</title>
   </head>
   <body>
-    <Nav />
+    <Nav title="New Title" />
     <slot />
     <nav>
       <ul class="list-none flex gap-x-4">
@@ -38,7 +38,11 @@ let session = await Astro.locals.auth.validate();
         </li>
       </ul>
     </nav>
-    <input id="sid" type="hidden" data-session={session?.sessionId} />
+    {
+      session && (
+        <input id="sid" type="hidden" data-session={session.sessionId} />
+      )
+    }
   </body>
 </html>
 

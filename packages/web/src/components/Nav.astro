@@ -1,5 +1,11 @@
 ---
-import { Button } from "@/components/ui/Button";
+import { Button } from "@/components/ui/button";
+
+export interface Props {
+  title?: string;
+}
+
+const { title = "Site Title" } = Astro.props as Props;
 ---
 
 <div
@@ -8,7 +14,7 @@ import { Button } from "@/components/ui/Button";
   <div class="container mx-auto flex items-center justify-between">
     <a href="/">
       <div>
-        <h1 class="text-2xl">Title</h1>
+        <h1 class="text-2xl">{title}</h1>
       </div>
     </a>
     <div class="flex items-center gap-x-2">

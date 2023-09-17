@@ -3,6 +3,7 @@
 // import { RDSDataClient } from "@aws-sdk/client-rds-data";
 import { drizzle } from "drizzle-orm/node-postgres";
 import { Pool } from "pg";
+import * as schema from "./schema";
 
 // Init Drizzle ORM
 /**
@@ -13,6 +14,7 @@ import { Pool } from "pg";
 //   database: RDS.Database.defaultDatabaseName,
 //   secretArn: RDS.Database.secretArn,
 //   resourceArn: RDS.Database.clusterArn,
+//   schema,
 // });
 
 const pool = new Pool({
@@ -22,5 +24,5 @@ const pool = new Pool({
   password: "postgres",
   database: "serverless",
 });
- 
-export const db = drizzle(pool);
+
+export const db = drizzle(pool, { schema });

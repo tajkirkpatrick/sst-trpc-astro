@@ -50,7 +50,9 @@ const protectedProcedure = t.procedure.use(isAuthed);
 export const appRouter = router({
   getRecords: publicProcedure.query(async ({ ctx }) => {
     try {
-      return await ctx.db.select().from(usersTable);
+      return await ctx.db
+        .select({ id: usersTable.id, username: usersTable.username })
+        .from(usersTable);
     } catch (err) {
       return new TRPCError({
         code: "INTERNAL_SERVER_ERROR",
@@ -67,8 +69,8 @@ export const appRouter = router({
         if (!input.username) {
           return new TRPCError({
             code: "BAD_REQUEST",
-            cause: new Error("input.fullName is null or undefined"),
-            message: "Please provide a name.",
+            cause: new Error("input.username is null or undefined"),
+            message: "Please provide a username.",
           });
         }
 

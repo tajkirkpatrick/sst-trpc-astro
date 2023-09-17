@@ -37,7 +37,9 @@
     "@types/react-dom": "^18.0.6",
     "drizzle-kit": "^0.19.13",
     "drizzle-orm": "^0.28.5",
-    "sst-trpc-astro": "workspace:../core/",
-    "@my-sst-app": "workspace:../"
+    "prettier": "^3.0.3",
+    "prettier-plugin-tailwindcss": "^0.5.4",
+    "@my-sst-app": "workspace:../",
+    "sst-trpc-astro": "workspace:../core/"
   }
 }
