@@ -2,7 +2,6 @@
 import "@/styles/globals.css";
 import "@fontsource/inter";
 import Nav from "@/components/Nav.astro";
-import { setToken } from "@/lib/trpc";
 
 interface Props {
   title: string;
@@ -10,22 +9,15 @@ interface Props {
 
 const { title } = Astro.props;
 
+let sessionID: string | undefined = undefined;
+
 let session = await Astro.locals.auth.validate();
 
 if (session) {
-  setToken(session.sessionId);
+  sessionID = session.sessionId;
 }
 
-const isLoggedIn = !!session;
-console.log("isLoggedIn", isLoggedIn);
-console.log("session ID from session obj: ", session?.sessionId ?? null);
-
-setToken(session?.sessionId ?? "nullme");
-
-console.log(
-  "session ID from Astro request: ",
-  Astro.request.headers.get("authorization")
-);
+console.log("isLoggedIn", !!session);
 ---
 
 <!doctype html>
@@ -56,6 +48,14 @@ console.log(
     </nav>
   </body>
 </html>
+
+<script define:vars={{ sessionID }}>
+  if (sessionID !== undefined) {
+    localStorage.setItem("auth_session", sessionID);
+  } else {
+    localStorage.removeItem("auth_session");
+  }
+</script>
 
 <style>
   * {

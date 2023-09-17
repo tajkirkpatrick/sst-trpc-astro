@@ -25,7 +25,7 @@ export async function createContextInner(opts?: CreateInnerContextOptions) {
   async function getUserFromHeader() {
     if (opts?.event.headers?.authorization) {
       const sessionId = opts.event.headers.authorization.split(" ")[1];
-      console.log("sessionId", sessionId);
+      console.log("sessionId from tRPC: ", sessionId);
       return sessionId;
     }
     return null;

@@ -1,6 +1,6 @@
 ---
 import Layout from "@/layouts/Layout.astro";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/Button";
 
 const session = await Astro.locals.auth.validate();
 ---
@@ -27,6 +27,10 @@ const session = await Astro.locals.auth.validate();
     <Button id="trpc">Call TRPC</Button>
   </main>
 </Layout>
+
+<script>
+  alert("sessionID: " + localStorage.getItem("auth_session"))
+</script>
 
 <script>
   import { trpcClient } from "../lib/trpc";
