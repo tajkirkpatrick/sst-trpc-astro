@@ -44,7 +44,7 @@ async function getSessionFromHeaders(event: APIGatewayProxyEventV2) {
       return null;
     }
 
-    const result = preparedSessionQuery.execute({
+    const result = await preparedSessionQuery.execute({
       sessionId: authHeader.split(" ")[1],
     });
 
