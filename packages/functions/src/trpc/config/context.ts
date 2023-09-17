@@ -6,7 +6,12 @@ import { sql } from "drizzle-orm";
 import { db } from "@my-sst-app/core/drizzle/";
 
 export const preparedUserQuery = db.query.usersTable
-  .findMany()
+  .findMany({
+    columns: {
+      createdAt: false,
+      id: false,
+    },
+  })
   .prepare("preparedUserQuery");
 
 const preparedSessionQuery = db.query.sessionsTable
@@ -20,7 +25,7 @@ const preparedSessionQuery = db.query.sessionsTable
       userId: false,
     },
   })
-  .prepare("preparedSessionQuery");
+  .prepare("preparedSessionAndUserQuery");
 
 /**
  * Defines your inner context shape.
@@ -76,6 +81,8 @@ export async function createContext({
   context,
 }: CreateAWSLambdaContextOptions<APIGatewayProxyEventV2>) {
   const sessionAndUser = await getSessionFromHeaders(event);
+
+  // console.log("sessionAndUser", sessionAndUser);
 
   const contextInner = await createContextInner({
     context,
