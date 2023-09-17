@@ -7,6 +7,9 @@ import { db } from "../drizzle";
 
 export const auth = lucia({
   env: import.meta.env.DEV ? "DEV" : "PROD",
+  experimental: {
+    debugMode: true,
+  },
   middleware: astro(),
   adapter: customAdapter(db, {
     user: "users",

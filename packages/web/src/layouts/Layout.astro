@@ -10,8 +10,6 @@ interface Props {
 const { title } = Astro.props;
 
 let session = await Astro.locals.auth.validate();
-
-console.log("isLoggedIn", !!session);
 ---
 
 <!doctype html>
@@ -40,6 +38,7 @@ console.log("isLoggedIn", !!session);
         </li>
       </ul>
     </nav>
+    <input id="sid" type="hidden" data-session={session?.sessionId} />
   </body>
 </html>
 
