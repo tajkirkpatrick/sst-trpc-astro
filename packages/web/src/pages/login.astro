@@ -2,7 +2,8 @@
 // src/pages/login.astro
 import Layout from "@/layouts/Layout.astro";
 import { auth } from "../lib/lucia";
-import { LuciaError } from "lucia";
+import * as z from "zod";
+import { DrizzleError } from "drizzle-orm";
 
 // check for form submissions
 if (Astro.request.method === "POST") {
@@ -11,22 +12,24 @@ if (Astro.request.method === "POST") {
   ) as Record<string, string>;
 
   // basic check
-  const validUsername =
-    typeof username === "string" &&
-    username.length >= 2 &&
-    username.length <= 31;
-  const validPassword =
-    typeof password === "string" &&
-    password.length >= 2 &&
-    password.length <= 255;
-  if (validUsername && validPassword) {
+  const loginSchema = z.object({
+    username: z.string().min(4),
+    password: z.string().min(4),
+  });
+
+  const result = loginSchema.safeParse({
+    username,
+    password,
+  });
+
+  if (result.success) {
     try {
       // find user by key
       // and validate password
       const key = await auth.useKey(
         "username",
-        username.toLowerCase(),
-        password,
+        result.data.username.toLocaleLowerCase(),
+        result.data.password,
       );
       const session = await auth.createSession({
         userId: key.userId,
@@ -36,18 +39,19 @@ if (Astro.request.method === "POST") {
       return Astro.redirect("/profile", 302); // redirect to profile page
     } catch (e) {
       if (
-        e instanceof LuciaError &&
+        e instanceof DrizzleError &&
         (e.message === "AUTH_INVALID_KEY_ID" ||
           e.message === "AUTH_INVALID_PASSWORD")
       ) {
         // user does not exist
         // or invalid password
-        console.log("Incorrect username or password");
+        console.error("Incorrect username or password");
       } else {
-        console.log("An unknown error occurred");
+        console.error("An unknown error occurred");
       }
     }
   } else {
+    console.error(result.error);
     console.log("Invalid input");
   }
 }

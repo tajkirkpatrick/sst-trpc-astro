@@ -1,7 +1,7 @@
 import type { Adapter, InitializeAdapter } from "lucia";
 
 import { MySqlDatabase } from "drizzle-orm/mysql-core";
-import { PgDatabase, PgTable } from "drizzle-orm/pg-core";
+import { PgDatabase } from "drizzle-orm/pg-core";
 import { BaseSQLiteDatabase } from "drizzle-orm/sqlite-core";
 import { DrizzleError, is } from "drizzle-orm";
 

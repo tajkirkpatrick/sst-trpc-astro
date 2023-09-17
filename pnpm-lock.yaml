@@ -151,6 +151,9 @@ importers:
       ulid:
         specifier: ^2.3.0
         version: 2.3.0
+      zod:
+        specifier: ^3.22.2
+        version: 3.22.2
     devDependencies:
       '@aws-sdk/client-rds-data':
         specifier: ^3.405.0

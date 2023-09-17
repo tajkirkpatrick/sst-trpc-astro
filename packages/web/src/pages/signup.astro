@@ -3,6 +3,8 @@
 import Layout from "@/layouts/Layout.astro";
 import { auth } from "../lib/lucia";
 import { ulid } from "ulid";
+import { z } from "zod";
+import { DrizzleError } from "drizzle-orm";
 
 // check for form submissions
 if (Astro.request.method === "POST") {
@@ -11,25 +13,27 @@ if (Astro.request.method === "POST") {
   ) as Record<string, string>;
 
   // basic check
-  const validUsername =
-    typeof username === "string" &&
-    username.length >= 2 &&
-    username.length <= 31;
-  const validPassword =
-    typeof password === "string" &&
-    password.length >= 2 &&
-    password.length <= 255;
-  if (validUsername && validPassword) {
+  const signUpSchema = z.object({
+    username: z.string().min(4),
+    password: z.string().min(4),
+  });
+
+  const result = signUpSchema.safeParse({
+    username,
+    password,
+  });
+
+  if (result.success) {
     try {
       const user = await auth.createUser({
         userId: ulid(),
         key: {
           providerId: "username", // auth method
-          providerUserId: username.toLowerCase(), // unique id when using "username" auth method
-          password, // hashed by Lucia
+          providerUserId: result.data.username.toLowerCase(), // unique id when using "username" auth method
+          password: result.data.password, // hashed by Lucia
         },
         attributes: {
-          username,
+          username: result.data.username,
         },
       });
       const session = await auth.createSession({
@@ -41,10 +45,16 @@ if (Astro.request.method === "POST") {
     } catch (e) {
       // this part depends on the database you're using
       // check for unique constraint error in user table
-      console.log("Something went wrong");
-      console.log(e);
+
+      if (e instanceof DrizzleError)
+        console.error("Invalid username or password");
+
+      console.log("Something went wrong wrong during sign up post request");
     }
   } else {
+    // ! Handle the invlaid input error
+    // Probably toast or modal here
+    console.error(result.error);
     console.log("Invalid input");
   }
 }

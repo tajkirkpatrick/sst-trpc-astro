@@ -9,7 +9,6 @@ export const preparedUserQuery = db.query.usersTable
   .findMany({
     columns: {
       createdAt: false,
-      id: false,
     },
   })
   .prepare("preparedUserQuery");

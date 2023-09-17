@@ -7,10 +7,8 @@ const session = await Astro.locals.auth.validate();
 
 <Layout title="Welcome to Astro.">
   <main>
-    <h1 id="greeting">
-      Welcome {
-        session ? JSON.stringify(session.user, null, 2) + "!" : "Unknown User"
-      }
+    <h1 id="greeting" class="capitalize">
+      Welcome {session ? session.user.username + "!" : "Unknown User"}
     </h1>
     <!-- style the input using tailwind css with a gray border and a ring on focus -->
     <input
