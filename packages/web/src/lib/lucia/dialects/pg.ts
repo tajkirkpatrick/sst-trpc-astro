@@ -1,28 +1,57 @@
 import { eq } from "drizzle-orm";
-import { pgTable as defaultPgTableFn, PgDatabase } from "drizzle-orm/pg-core";
+import {
+  PgDatabase,
+  type AnyPgTable,
+  type AnyPgColumn,
+} from "drizzle-orm/pg-core";
 import type { Adapter, InitializeAdapter, KeySchema, UserSchema } from "lucia";
-
-import * as schema from "@my-sst-app/core/src/drizzle/schema";
 
 import type { myDrizzleError } from "../adapter";
 
-export function createTables() {
-  const user = schema.usersTable;
-  const session = schema.sessionsTable;
-  const key = schema.keysTable;
+interface UserTable extends AnyPgTable {
+  id: AnyPgColumn;
+}
+
+interface KeyTable extends AnyPgTable {
+  id: AnyPgColumn;
+  userId: AnyPgColumn;
+  hashedPassword: AnyPgColumn;
+}
+
+interface SessionTable extends AnyPgTable {
+  id: AnyPgColumn;
+  userId: AnyPgColumn;
+  activeExpires: AnyPgColumn;
+  idleExpires: AnyPgColumn;
+}
+
+export function createTables(modelNames: {
+  schema: Record<string, unknown>;
+  user: string;
+  session: string | null;
+  key: string;
+}) {
+  const user = modelNames.schema[modelNames.user] as UserTable;
+  const session = modelNames.schema[modelNames.session ?? ""] as
+    | SessionTable
+    | undefined;
+  const key = modelNames.schema[modelNames.key] as KeyTable;
   return { session, user, key };
 }
 
 export function pgDrizzleAdapter(
   client: InstanceType<typeof PgDatabase>,
-  tableFn = defaultPgTableFn,
   modelNames: {
     user: string;
     session: string | null;
     key: string;
-  }
+    schema?: Record<string, unknown> | undefined;
+  },
 ): InitializeAdapter<Adapter> {
-  const { user, key, session } = createTables();
+  const { user, key, session } = createTables({
+    ...modelNames,
+    schema: modelNames.schema || {},
+  });
 
   return (luciaError) => {
     return {
@@ -47,7 +76,10 @@ export function pgDrizzleAdapter(
 
         if (!record) return null;
 
-        return { id: record.id, username: record.username! };
+        return {
+          id: record.id as string,
+          username: record.username! as string,
+        };
       },
       setUser: async (userData: UserSchema, keyData: KeySchema | null) => {
         if (!keyData) {
@@ -98,6 +130,10 @@ export function pgDrizzleAdapter(
         }
       },
       getSession: async (sessionId) => {
+        if (!session) {
+          throw new Error("Session table is not defined");
+        }
+
         const record = await client
           .select()
           .from(session)
@@ -105,13 +141,17 @@ export function pgDrizzleAdapter(
           .then((res) => res[0] ?? null);
 
         return {
-          id: record?.id!,
-          active_expires: record?.activeExpires!,
-          idle_expires: record?.idleExpires!,
-          user_id: record?.userId!,
+          id: record?.id! as string,
+          active_expires: Number(record?.activeExpires!),
+          idle_expires: Number(record?.idleExpires!),
+          user_id: record?.userId! as string,
         };
       },
       getSessionsByUserId: async (userId) => {
+        if (!session) {
+          throw new Error("Session table is not defined");
+        }
+
         const records = await client
           .select()
           .from(session)
@@ -119,15 +159,19 @@ export function pgDrizzleAdapter(
           .then((res) => res ?? []);
 
         const resultRecords = records.map((record) => ({
-          id: record.id!,
-          active_expires: record.activeExpires!,
-          idle_expires: record.idleExpires!,
-          user_id: record.userId!,
+          id: record.id! as string,
+          active_expires: Number(record.activeExpires!),
+          idle_expires: Number(record.idleExpires!),
+          user_id: record.userId! as string,
         }));
 
         return resultRecords;
       },
       setSession: async (sessionData) => {
+        if (!session) {
+          throw new Error("Session table is not defined");
+        }
+
         try {
           const { active_expires, idle_expires, user_id, ...restSessionData } =
             sessionData;
@@ -146,12 +190,24 @@ export function pgDrizzleAdapter(
         }
       },
       deleteSession: async (sessionId) => {
+        if (!session) {
+          throw new Error("Session table is not defined");
+        }
+
         await client.delete(session).where(eq(session.id, sessionId));
       },
       deleteSessionsByUserId: async (userId) => {
+        if (!session) {
+          throw new Error("Session table is not defined");
+        }
+
         await client.delete(session).where(eq(session.userId, userId));
       },
       updateSession: async (sessionId, partialSession) => {
+        if (!session) {
+          throw new Error("Session table is not defined");
+        }
+
         try {
           await client
             .update(session)
@@ -172,9 +228,9 @@ export function pgDrizzleAdapter(
           .then((res) => res[0] ?? null);
 
         return {
-          id: record?.id!,
-          hashed_password: record?.hashedPassword!,
-          user_id: record?.userId!,
+          id: record?.id! as string,
+          hashed_password: record?.hashedPassword! as string,
+          user_id: record?.userId! as string,
         };
       },
       getKeysByUserId: async (userId) => {
@@ -185,9 +241,9 @@ export function pgDrizzleAdapter(
           .then((res) => res ?? []);
 
         const resultRecords = records.map((record) => ({
-          id: record.id!,
-          hashed_password: record.hashedPassword!,
-          user_id: record.userId!,
+          id: record.id! as string,
+          hashed_password: record.hashedPassword! as string,
+          user_id: record.userId! as string,
         }));
 
         return resultRecords;

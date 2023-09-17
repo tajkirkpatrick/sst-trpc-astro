@@ -5,6 +5,8 @@ import { astro } from "lucia/middleware";
 import { customAdapter } from "./adapter";
 import { db } from "../drizzle";
 
+import * as schema from "@my-sst-app/core/src/drizzle/schema";
+
 export const auth = lucia({
   env: import.meta.env.DEV ? "DEV" : "PROD",
   experimental: {
@@ -12,9 +14,10 @@ export const auth = lucia({
   },
   middleware: astro(),
   adapter: customAdapter(db, {
-    user: "users",
-    session: "auth_sessions",
-    key: "auth_keys",
+    user: "usersTable",
+    session: "sessionsTable",
+    key: "keysTable",
+    schema,
   }),
   getUserAttributes(databaseUser) {
     return {

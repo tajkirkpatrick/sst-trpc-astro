@@ -23,7 +23,7 @@ let session = await Astro.locals.auth.validate();
     <title>{title}</title>
   </head>
   <body>
-    <Nav title="New Title" />
+    <Nav title={title} />
     <slot />
     <nav>
       <ul class="list-none flex gap-x-4">

@@ -19,7 +19,7 @@ export function createTables(
     user: string;
     session: string | null;
     key: string;
-  }
+  },
 ) {
   const user = mySqlTable(modelNames.user, {
     id: varchar("id", {
@@ -67,14 +67,14 @@ export function createTables(
 
 export function mySqlDrizzleAdapter(
   client: InstanceType<typeof MySqlDatabase>,
-  tableFn = defaultMySqlTableFn,
-  modelNames: {
-    user: string;
-    session: string | null;
-    key: string;
-  }
+  // tableFn = defaultMySqlTableFn,
+  // modelNames: {
+  //   user: string;
+  //   session: string | null;
+  //   key: string;
+  // }
 ): InitializeAdapter<Adapter> {
-  const { user, key, session } = createTables(tableFn, modelNames);
+  // const { user, key, session } = createTables(tableFn, modelNames);
 
   // const $transaction = <_Query extends (...args: any) => any>(
   //   query: _Query

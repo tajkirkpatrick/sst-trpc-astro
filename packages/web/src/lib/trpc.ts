@@ -1,8 +1,8 @@
 import type { AppRouter } from "@my-sst-app/functions/src/trpc/config/router";
-import { createTRPCProxyClient, httpBatchLink } from "@trpc/client";
+import { createTRPCProxyClient, httpBatchLink, loggerLink } from "@trpc/client";
 
 function getTokenFromHTML() {
-  // get element with id session_token from the browser
+  // get hidden element with unique id from the browser
   const sessionTokenElement = document.getElementById("sid");
   const sessionId = sessionTokenElement?.dataset.session;
 
@@ -14,6 +14,12 @@ function getTokenFromHTML() {
 
 export const trpcClient = createTRPCProxyClient<AppRouter>({
   links: [
+    loggerLink({
+      enabled: (opts) =>
+        process.env.NODE_ENV === "development" ||
+        (import.meta.env.DEV && typeof window !== "undefined") ||
+        (opts.direction === "down" && opts.result instanceof Error),
+    }),
     httpBatchLink({
       url: `${import.meta.env.PUBLIC_TRPC_URL}/api/trpc`,
       headers() {

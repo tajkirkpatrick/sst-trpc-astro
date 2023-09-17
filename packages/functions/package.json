@@ -16,7 +16,6 @@
     "@trpc/server": "^10.38.1",
     "@types/aws-lambda": "^8.10.119",
     "drizzle-orm": "^0.28.5",
-    "sst-trpc-astro": "workspace:../",
     "tozod": "^3.0.0",
     "zod": "^3.22.2"
   }

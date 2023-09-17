@@ -17,7 +17,7 @@ export function createTables(
     user: string;
     session: string | null;
     key: string;
-  }
+  },
 ) {
   const user = sqliteTable(modelNames.user, {
     id: text("id")
@@ -53,14 +53,14 @@ export function createTables(
 
 export function SQLiteDrizzleAdapter(
   client: InstanceType<typeof BaseSQLiteDatabase>,
-  tableFn = defaultSqliteTableFn,
-  modelNames: {
-    user: string;
-    session: string | null;
-    key: string;
-  }
+  // tableFn = defaultSqliteTableFn,
+  // modelNames: {
+  //   user: string;
+  //   session: string | null;
+  //   key: string;
+  // }
 ): InitializeAdapter<Adapter> {
-  const { user, key, session } = createTables(tableFn, modelNames);
+  // const { user, key, session } = createTables(tableFn, modelNames);
 
   // const $transaction = <_Query extends (...args: any) => any>(
   //   query: _Query

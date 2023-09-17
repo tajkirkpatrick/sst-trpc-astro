@@ -6,9 +6,11 @@ import { ulid } from "ulid";
 
 // check for form submissions
 if (Astro.request.method === "POST") {
-  const formData = await Astro.request.formData();
-  const username = formData.get("username");
-  const password = formData.get("password");
+  const {username, password} = Object.fromEntries(await Astro.request.formData().then(data => data.entries()));
+
+  // const formData = await Astro.request.formData();
+  // const username = formData.get("username");
+  // const password = formData.get("password");
   // basic check
   const validUsername =
     typeof username === "string" &&

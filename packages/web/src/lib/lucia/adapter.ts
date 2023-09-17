@@ -3,9 +3,6 @@ import type { Adapter, InitializeAdapter } from "lucia";
 import { MySqlDatabase } from "drizzle-orm/mysql-core";
 import { PgDatabase } from "drizzle-orm/pg-core";
 import { BaseSQLiteDatabase } from "drizzle-orm/sqlite-core";
-import type { MySqlTableFn } from "drizzle-orm/mysql-core";
-import type { PgTableFn } from "drizzle-orm/pg-core";
-import type { AnySQLiteTable, SQLiteTableFn } from "drizzle-orm/sqlite-core";
 import { DrizzleError, is } from "drizzle-orm";
 
 import { mySqlDrizzleAdapter } from "./dialects/mysql";
@@ -21,50 +18,42 @@ export type SqlFlavorOptions =
   | AnyPgDatabase
   | AnySQLiteDatabase;
 
-export type TableFn<Flavor> = Flavor extends AnyMySqlDatabase
-  ? MySqlTableFn
-  : Flavor extends AnyPgDatabase
-  ? PgTableFn
-  : Flavor extends AnySQLiteDatabase
-  ? SQLiteTableFn
-  : AnySQLiteTable;
-
 export type myDrizzleError = InstanceType<typeof DrizzleError>;
 
 export function customAdapter<SqlFlavor extends SqlFlavorOptions>(
   db: SqlFlavor,
   modelNames?: {
-    // user: InstanceType<typeof Table>;
-    // session: InstanceType<typeof Table>;
-    // key: InstanceType<typeof Table>;
     user: string;
     session: string | null;
     key: string;
+    schema: Record<string, unknown>;
   },
-  table?: TableFn<SqlFlavor>
 ): InitializeAdapter<Adapter> {
-  const getModelNames = () => {
-    if (!modelNames) {
-      return {
-        user: "auth_user",
-        session: "user_session",
-        key: "user_key",
-      };
-    }
-    return modelNames;
+  const getModelNames = (
+    user: string = "auth_users",
+    session: string | null = "auth_session",
+    key: string = "auth_keys",
+    schema: Record<string, unknown> = {},
+  ) => {
+    return { user, session, key, schema };
   };
 
-  modelNames = getModelNames();
+  modelNames = modelNames || getModelNames();
 
   if (is(db, MySqlDatabase)) {
-    return mySqlDrizzleAdapter(db, table as MySqlTableFn, modelNames);
+    // ! currently disabled
+    // return mySqlDrizzleAdapter(db, table as MySqlTableFn, modelNames);
+    return mySqlDrizzleAdapter(db);
   } else if (is(db, PgDatabase)) {
-    return pgDrizzleAdapter(db, table as PgTableFn, modelNames);
+    // * currently enabled
+    return pgDrizzleAdapter(db, modelNames);
   } else if (is(db, BaseSQLiteDatabase)) {
-    return SQLiteDrizzleAdapter(db, table as SQLiteTableFn, modelNames);
+    // ! currently disabled
+    // return SQLiteDrizzleAdapter(db, table as SQLiteTableFn, modelNames);
+    return SQLiteDrizzleAdapter(db);
   }
 
   throw new Error(
-    `Unsupported database type (${typeof db}) in Drizzle adapter.`
+    `Unsupported database type (${typeof db}) in Drizzle adapter.`,
   );
 }
