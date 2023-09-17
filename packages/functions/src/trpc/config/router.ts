@@ -8,7 +8,7 @@ import * as z from "zod";
 import { toZod } from "tozod";
 
 import { usersTable, type NewUser } from "@my-sst-app/core/drizzle/schema";
-import { Context } from "./context";
+import { Context, preparedUserQuery } from "./context";
 
 type RouterInput = inferRouterInputs<AppRouter>;
 type RouterOutput = inferRouterOutputs<AppRouter>;
@@ -48,11 +48,9 @@ const isAuthed = t.middleware((opts) => {
 const protectedProcedure = t.procedure.use(isAuthed);
 
 export const appRouter = router({
-  getRecords: publicProcedure.query(async ({ ctx }) => {
+  getRecords: publicProcedure.query(async () => {
     try {
-      return await ctx.db
-        .select({ id: usersTable.id, username: usersTable.username })
-        .from(usersTable);
+      return await preparedUserQuery.execute();
     } catch (err) {
       return new TRPCError({
         code: "INTERNAL_SERVER_ERROR",

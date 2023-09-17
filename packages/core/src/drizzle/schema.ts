@@ -4,7 +4,7 @@ import {
   text,
   bigint,
   varchar,
-  date,
+  timestamp,
   boolean,
 } from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
@@ -24,8 +24,8 @@ export const usersTable = pgTable("users", {
     .$defaultFn(() => ulid()),
   // other user attributes
   username: text("username"),
-  createdAt: date("createdAt")
-    .$defaultFn(() => new Date(Date.now()).toISOString())
+  createdAt: timestamp("createdAt", { withTimezone: true })
+    .defaultNow()
     .notNull(),
 });
 
@@ -82,8 +82,8 @@ export const keysTable = pgTable("auth_keys", {
   hashedPassword: varchar("hashed_password", {
     length: 255,
   }),
-  createdAt: date("createdAt")
-    .$defaultFn(() => new Date(Date.now()).toISOString())
+  createdAt: timestamp("createdAt", { withTimezone: true })
+    .defaultNow()
     .notNull(),
   // primary: boolean("primary").notNull().default(false),
 });

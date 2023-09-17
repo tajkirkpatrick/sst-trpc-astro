@@ -1,8 +1,26 @@
 import { APIGatewayProxyEventV2 } from "aws-lambda";
 import { inferAsyncReturnType } from "@trpc/server";
 import { CreateAWSLambdaContextOptions } from "@trpc/server/adapters/aws-lambda";
+import { sql } from "drizzle-orm";
 
 import { db } from "@my-sst-app/core/drizzle/";
+
+export const preparedUserQuery = db.query.usersTable
+  .findMany()
+  .prepare("preparedUserQuery");
+
+const preparedSessionQuery = db.query.sessionsTable
+  .findFirst({
+    where: (sessionsTable, { eq }) =>
+      eq(sessionsTable.id, sql.placeholder("sessionId")),
+    with: {
+      user: true,
+    },
+    columns: {
+      userId: false,
+    },
+  })
+  .prepare("preparedSessionQuery");
 
 /**
  * Defines your inner context shape.
@@ -21,15 +39,8 @@ async function getSessionFromHeaders(event: APIGatewayProxyEventV2) {
       return null;
     }
 
-    const result = db.query.sessionsTable.findFirst({
-      where: (sessionsTable, { eq }) =>
-        eq(sessionsTable.id, authHeader.split(" ")[1]),
-      with: {
-        user: true,
-      },
-      columns: {
-        userId: false,
-      },
+    const result = preparedSessionQuery.execute({
+      sessionId: authHeader.split(" ")[1],
     });
 
     return result || null;
