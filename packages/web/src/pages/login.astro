@@ -4,6 +4,8 @@ import Layout from "@/layouts/Layout.astro";
 import { auth } from "../lib/lucia";
 import * as z from "zod";
 import { DrizzleError } from "drizzle-orm";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 
 // check for form submissions
 if (Astro.request.method === "POST") {
@@ -60,13 +62,33 @@ const session = await Astro.locals.auth.validate();
 if (session) return Astro.redirect("/profile", 302); // redirect to profile page
 ---
 
-<Layout title="Sign in">
-  <h1>Sign in</h1>
-  <form method="POST">
-    <label for="username">Username</label>
-    <input name="username" id="username" /><br />
-    <label for="password">Password</label>
-    <input type="password" name="password" id="password" /><br />
-    <button type="submit">Submit</button>
-  </form>
+<Layout title="Login">
+  <main class="flex min-h-screen w-screen grow flex-row">
+    <div class="w-1/2 bg-black">
+      <span></span>
+    </div>
+    <div class="flex w-1/2 flex-col items-center justify-center bg-white">
+      <h3 class="-mb-4 scroll-m-20 text-2xl font-extrabold tracking-tight">
+        Create an account
+      </h3>
+      <p
+        class="text-sm leading-7 text-muted-foreground [&:not(:first-child)]:mt-6"
+      >
+        It's free and only takes a minute!
+      </p>
+
+      <form method="POST" class="my-0 mt-4 w-full px-20 py-0">
+        <Input name="username" id="username" placeholder="username" /><br />
+        <Input
+          type="password"
+          name="password"
+          id="password"
+          placeholder="password"
+        /><br />
+        <Button className="w-full font-thin" type="submit">
+          Sign In with Username
+        </Button>
+      </form>
+    </div>
+  </main>
 </Layout>

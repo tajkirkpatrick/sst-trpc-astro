@@ -24,7 +24,6 @@ let session = await Astro.locals.auth.validate();
   </head>
   <body>
     <Nav title={title} />
-    <slot />
     <nav>
       <ul class="flex list-none gap-x-4">
         <li><a href="/">Home</a></li>
@@ -38,16 +37,17 @@ let session = await Astro.locals.auth.validate();
         </li>
       </ul>
     </nav>
+    <slot />
     {
       session && (
         <input id="sid" type="hidden" data-session={session.sessionId} />
       )
     }
   </body>
-</html>
 
-<style>
-  * {
-    font-family: "Inter", sans-serif;
-  }
-</style>
+  <style>
+    * {
+      font-family: "Inter", sans-serif;
+    }
+  </style>
+</html>

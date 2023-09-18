@@ -81,7 +81,10 @@ export function pgDrizzleAdapter(
             idle_expires: Number(sessionRecord.idleExpires),
             user_id: sessionRecord.userId as string,
           },
-          userRecord,
+          {
+            ...userRecord,
+            id: userRecord?.id as string,
+          },
         ];
       },
       getUser: async (userId: string) => {
