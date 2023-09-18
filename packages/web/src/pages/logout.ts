@@ -14,3 +14,15 @@ export const POST: APIRoute = async (context) => {
   context.locals.auth.setSession(null);
   return context.redirect("/", 302);
 };
+
+export const GET: APIRoute = async (context) => {
+  const session = await context.locals.auth.validate();
+  if (!session) {
+    return context.redirect("/", 302);
+  }
+  // make sure to invalidate the current session!
+  await auth.invalidateSession(session.sessionId);
+  // delete session cookie
+  context.locals.auth.setSession(null);
+  return context.redirect("/", 302);
+};

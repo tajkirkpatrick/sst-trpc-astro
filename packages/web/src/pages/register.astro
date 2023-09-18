@@ -1,5 +1,4 @@
 ---
-// src/pages/signup.astro
 import Layout from "@/layouts/Layout.astro";
 import { auth } from "../lib/lucia";
 import { ulid } from "ulid";
@@ -63,8 +62,8 @@ const session = await Astro.locals.auth.validate();
 if (session) return Astro.redirect("/profile", 302);
 ---
 
-<Layout title="Signup">
-  <h1>Sign up</h1>
+<Layout title="Register">
+  <h1>Register</h1>
   <form method="POST">
     <label for="username">Username</label>
     <input name="username" id="username" /><br />

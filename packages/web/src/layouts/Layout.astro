@@ -24,19 +24,6 @@ let session = await Astro.locals.auth.validate();
   </head>
   <body>
     <Nav title={title} />
-    <nav>
-      <ul class="flex list-none gap-x-4">
-        <li><a href="/">Home</a></li>
-        <li>
-          <a href="/signup">Create An Account</a>
-        </li>
-        <li>
-          <form method="post" action="/logout">
-            <button type="submit" value="Sign out">Sign Out</button>
-          </form>
-        </li>
-      </ul>
-    </nav>
     <slot />
     {
       session && (

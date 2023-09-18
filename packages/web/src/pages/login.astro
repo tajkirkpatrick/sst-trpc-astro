@@ -4,8 +4,11 @@ import Layout from "@/layouts/Layout.astro";
 import { auth } from "../lib/lucia";
 import * as z from "zod";
 import { DrizzleError } from "drizzle-orm";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
+import LoginForm from "@/components/LoginForm";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { AlertCircle } from "lucide-react";
+
+let showErrorMessage = false;
 
 // check for form submissions
 if (Astro.request.method === "POST") {
@@ -38,7 +41,7 @@ if (Astro.request.method === "POST") {
         attributes: {},
       });
       Astro.locals.auth.setSession(session); // set session cookie
-      return Astro.redirect("/profile", 302); // redirect to profile page
+      return Astro.redirect("/", 302); // redirect to profile page
     } catch (e) {
       if (
         e instanceof DrizzleError &&
@@ -47,48 +50,58 @@ if (Astro.request.method === "POST") {
       ) {
         // user does not exist
         // or invalid password
+        showErrorMessage = true;
         console.error("Incorrect username or password");
       } else {
-        console.error("An unknown error occurred");
+        showErrorMessage = true;
+        console.error("An unknown error occurred during login");
       }
     }
   } else {
+    showErrorMessage = true;
     console.error(result.error);
-    console.log("Invalid input");
   }
 }
 
 const session = await Astro.locals.auth.validate();
-if (session) return Astro.redirect("/profile", 302); // redirect to profile page
+if (session) return Astro.redirect("/", 302); // redirect to profile page
 ---
 
 <Layout title="Login">
   <main class="flex min-h-screen w-screen grow flex-row">
-    <div class="w-1/2 bg-black">
+    <div
+      class="mx-8 my-24 hidden aspect-auto w-1/2 rounded-xl bg-black md:block"
+    >
       <span></span>
     </div>
-    <div class="flex w-1/2 flex-col items-center justify-center bg-white">
+    <div
+      class="flex w-full flex-col items-center justify-center bg-white md:w-1/2"
+    >
       <h3 class="-mb-4 scroll-m-20 text-2xl font-extrabold tracking-tight">
-        Create an account
+        Welcome back!
       </h3>
       <p
         class="text-sm leading-7 text-muted-foreground [&:not(:first-child)]:mt-6"
       >
-        It's free and only takes a minute!
+        We missed you, what's new?
       </p>
 
-      <form method="POST" class="my-0 mt-4 w-full px-20 py-0">
-        <Input name="username" id="username" placeholder="username" /><br />
-        <Input
-          type="password"
-          name="password"
-          id="password"
-          placeholder="password"
-        /><br />
-        <Button className="w-full font-thin" type="submit">
-          Sign In with Username
-        </Button>
-      </form>
+      <div class="w-2/3">
+        <LoginForm client:load />
+      </div>
+      {
+        showErrorMessage && (
+          <div class="mt-2 w-2/3">
+            <Alert variant="destructive">
+              <AlertCircle className="h-4 w-4" />
+              <AlertTitle>Error</AlertTitle>
+              <AlertDescription>
+                Invalid username or password. Please try again.
+              </AlertDescription>
+            </Alert>
+          </div>
+        )
+      }
     </div>
   </main>
 </Layout>
