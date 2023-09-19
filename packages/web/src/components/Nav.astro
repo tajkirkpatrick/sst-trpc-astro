@@ -30,7 +30,7 @@ const session = await Astro.locals.auth.validate();
       {
         !session && (
           <Button variant="link">
-            <a href="/login">Login</a>
+            <a href="/auth/login">Login</a>
           </Button>
         )
       }
@@ -43,7 +43,7 @@ const session = await Astro.locals.auth.validate();
       }
       {
         !session && (
-          <a href="/register">
+          <a href="/auth/register">
             <div>
               <Button id="login">
                 Register

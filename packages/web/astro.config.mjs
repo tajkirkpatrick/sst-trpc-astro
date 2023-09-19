@@ -5,7 +5,7 @@ import react from "@astrojs/react";
 
 // https://astro.build/config
 export default defineConfig({
-  integrations: [tailwind({ applyBaseStyles: false }), react()],
+  integrations: [react(), tailwind({ applyBaseStyles: false })],
   output: "server",
   adapters: aws(),
   vite: {

@@ -1,0 +1,162 @@
+---
+// src/pages/login.astro
+import Layout from "@/layouts/Layout.astro";
+import { auth } from "@/lib/lucia";
+import * as z from "zod";
+import { DrizzleError } from "drizzle-orm";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { AlertCircle } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
+
+let showErrorMessage = false;
+let showFormatMessage = false;
+
+// check for form submissions
+if (Astro.request.method === "POST") {
+  const { username } = Object.fromEntries(
+    await Astro.request.formData(),
+  ) as Record<string, string>;
+
+  // basic check
+  const loginSchema = z.object({
+    username: z.string().email(),
+  });
+
+  const result = loginSchema.safeParse({
+    username,
+  });
+
+  if (result.success) {
+    try {
+      // find user by key
+      // and validate password
+      const key = await auth.useKey(
+        "username",
+        result.data.username.toLocaleLowerCase(),
+        null,
+      );
+      const session = await auth.createSession({
+        userId: key.userId,
+        attributes: {},
+      });
+      Astro.locals.auth.setSession(session); // set session cookie
+      return Astro.redirect("/", 302); // redirect to profile page
+    } catch (e) {
+      if (
+        e instanceof DrizzleError &&
+        (e.message === "AUTH_INVALID_KEY_ID" ||
+          e.message === "AUTH_INVALID_PASSWORD")
+      ) {
+        // user does not exist
+        // or invalid password
+        showErrorMessage = true;
+        console.error("Incorrect username or password");
+      } else {
+        showErrorMessage = true;
+        console.error("An unknown error occurred during login");
+      }
+    }
+  } else {
+    showErrorMessage = false;
+    showFormatMessage = true;
+  }
+}
+
+const session = await Astro.locals.auth.validate();
+if (session) return Astro.redirect("/", 302); // redirect to profile page
+---
+
+<Layout title="Login">
+  <main class="flex min-h-screen w-screen grow flex-row">
+    <div
+      class="mx-8 my-24 hidden aspect-auto w-1/2 rounded-xl bg-black md:block"
+    >
+      <span></span>
+    </div>
+    <div
+      class="flex w-full flex-col items-center justify-center bg-white md:w-1/2"
+    >
+      <div class="w-2/3">
+        <Card>
+          <CardHeader>
+            <CardTitle>
+              <h3
+                class="-mb-4 scroll-m-20 text-2xl font-extrabold tracking-tight"
+              >
+                Welcome back!
+              </h3>
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <form method="POST" class="w-full space-y-2">
+              <Label htmlFor="username">Email</Label>
+              <Input
+                type="email"
+                name="username"
+                id="username"
+                placeholder="username@email.com"
+              />
+
+              <Button
+                className="w-full text-sm font-thin tracking-wider"
+                type="submit"
+              >
+                Sign In with Email
+              </Button>
+            </form>
+            <div class="relative my-4">
+              <div
+                class="absolute bottom-0 left-0 right-0 top-0 flex items-center"
+              >
+                <Separator />
+              </div>
+              <div class="relative flex justify-center text-xs uppercase">
+                <span class="bg-background px-2 text-muted-foreground"
+                  >Or continue with</span
+                >
+              </div>
+            </div>
+            <a href="/auth/google" class="w-full">
+              <Button variant="outline" id="googleAuth" className="w-full">
+                Sign In with Google <img
+                  class="size-square ml-2 h-auto w-[1rem]"
+                  src="/google.svg"
+                  alt="Google logo"
+                />
+              </Button>
+            </a>
+          </CardContent>
+        </Card>
+      </div>
+      {
+        showErrorMessage && (
+          <div class="mt-2 w-2/3">
+            <Alert variant="destructive">
+              <AlertCircle className="h-4 w-4" />
+              <AlertTitle>Error</AlertTitle>
+              <AlertDescription>
+                Something went wrong! Wait a few minutes and try again.
+              </AlertDescription>
+            </Alert>
+          </div>
+        )
+      }
+      {
+        showFormatMessage && (
+          <div class="mt-2 w-2/3">
+            <Alert variant="helpful">
+              <AlertCircle className="h-4 w-4" />
+              <AlertDescription>
+                Invalid input detected. Please try again!
+              </AlertDescription>
+            </Alert>
+          </div>
+        )
+      }
+    </div>
+  </main>
+</Layout>

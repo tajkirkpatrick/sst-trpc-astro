@@ -100,15 +100,24 @@ importers:
       '@astrojs/tailwind':
         specifier: ^5.0.0
         version: 5.0.0(astro@3.1.0)(tailwindcss@3.3.3)
+      '@aws-sdk/client-rds-data':
+        specifier: ^3.405.0
+        version: 3.405.0
       '@fontsource/inter':
         specifier: ^5.0.8
         version: 5.0.8
-      '@hookform/resolvers':
-        specifier: ^3.3.1
-        version: 3.3.1(react-hook-form@7.46.1)
+      '@lucia-auth/oauth':
+        specifier: ^3.2.0
+        version: 3.2.0(lucia@2.6.0)
+      '@my-sst-app':
+        specifier: workspace:../
+        version: link:..
       '@radix-ui/react-label':
         specifier: ^2.0.2
         version: 2.0.2(@types/react-dom@18.2.7)(@types/react@18.2.21)(react-dom@18.2.0)(react@18.2.0)
+      '@radix-ui/react-separator':
+        specifier: ^1.0.3
+        version: 1.0.3(@types/react-dom@18.2.7)(@types/react@18.2.21)(react-dom@18.2.0)(react@18.2.0)
       '@radix-ui/react-slot':
         specifier: ^1.0.2
         version: 1.0.2(@types/react@18.2.21)(react@18.2.0)
@@ -127,6 +136,9 @@ importers:
       clsx:
         specifier: ^2.0.0
         version: 2.0.0
+      drizzle-orm:
+        specifier: ^0.28.5
+        version: 0.28.5(@aws-sdk/client-rds-data@3.405.0)(@types/pg@8.10.2)(kysely@0.25.0)(pg@8.11.3)
       lucia:
         specifier: ^2.6.0
         version: 2.6.0
@@ -142,9 +154,6 @@ importers:
       react-dom:
         specifier: ^18.0.0
         version: 18.2.0(react@18.2.0)
-      react-hook-form:
-        specifier: ^7.46.1
-        version: 7.46.1(react@18.2.0)
       sst:
         specifier: 2.25.2
         version: 2.25.2(@types/react@18.2.21)(pg@8.11.3)
@@ -164,12 +173,6 @@ importers:
         specifier: ^3.22.2
         version: 3.22.2
     devDependencies:
-      '@aws-sdk/client-rds-data':
-        specifier: ^3.405.0
-        version: 3.405.0
-      '@my-sst-app':
-        specifier: workspace:../
-        version: link:..
       '@types/pg':
         specifier: ^8.10.2
         version: 8.10.2
@@ -182,9 +185,6 @@ importers:
       drizzle-kit:
         specifier: ^0.19.13
         version: 0.19.13
-      drizzle-orm:
-        specifier: ^0.28.5
-        version: 0.28.5(@aws-sdk/client-rds-data@3.405.0)(@types/pg@8.10.2)(kysely@0.25.0)(pg@8.11.3)
       prettier:
         specifier: ^3.0.3
         version: 3.0.3
@@ -2725,14 +2725,6 @@ packages:
       '@repeaterjs/repeater': 3.0.4
       tslib: 2.6.2
 
-  /@hookform/resolvers@3.3.1(react-hook-form@7.46.1):
-    resolution: {integrity: sha512-K7KCKRKjymxIB90nHDQ7b9nli474ru99ZbqxiqDAWYsYhOsU3/4qLxW91y+1n04ic13ajjZ66L3aXbNef8PELQ==}
-    peerDependencies:
-      react-hook-form: ^7.0.0
-    dependencies:
-      react-hook-form: 7.46.1(react@18.2.0)
-    dev: false
-
   /@httptoolkit/websocket-stream@6.0.1:
     resolution: {integrity: sha512-A0NOZI+Glp3Xgcz6Na7i7o09+/+xm2m0UCU8gdtM2nIv6/cjLmhMZMqehSpTlgbx9omtLmV8LVqOskPEyWnmZQ==}
     dependencies:
@@ -2779,6 +2771,14 @@ packages:
     dependencies:
       '@jridgewell/resolve-uri': 3.1.1
       '@jridgewell/sourcemap-codec': 1.4.15
+
+  /@lucia-auth/oauth@3.2.0(lucia@2.6.0):
+    resolution: {integrity: sha512-3HFOZurGvWU5jjdqwtFBha/sBvTE1N5Ed5UJGhdM2lozhuAQJUF9vubN5cPPJg5Svkcu/rlgLeTmBp8MmzlK6Q==}
+    peerDependencies:
+      lucia: ^2.0.0
+    dependencies:
+      lucia: 2.6.0
+    dev: false
 
   /@lukeed/ms@2.0.1:
     resolution: {integrity: sha512-Xs/4RZltsAL7pkvaNStUQt7netTkyxrS0K+RILcVr3TRMS/ToOg4I6uNfhB9SlGsnWBym4U+EaXq0f0cEMNkHA==}
@@ -2878,6 +2878,27 @@ packages:
     dependencies:
       '@babel/runtime': 7.22.15
       '@radix-ui/react-slot': 1.0.2(@types/react@18.2.21)(react@18.2.0)
+      '@types/react': 18.2.21
+      '@types/react-dom': 18.2.7
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
+    dev: false
+
+  /@radix-ui/react-separator@1.0.3(@types/react-dom@18.2.7)(@types/react@18.2.21)(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-itYmTy/kokS21aiV5+Z56MZB54KrhPgn6eHDKkFeOLR34HMN2s8PaN47qZZAGnvupcjxHaFZnW4pQEh0BvvVuw==}
+    peerDependencies:
+      '@types/react': '*'
+      '@types/react-dom': '*'
+      react: ^16.8 || ^17.0 || ^18.0
+      react-dom: ^16.8 || ^17.0 || ^18.0
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
+      '@types/react-dom':
+        optional: true
+    dependencies:
+      '@babel/runtime': 7.22.15
+      '@radix-ui/react-primitive': 1.0.3(@types/react-dom@18.2.7)(@types/react@18.2.21)(react-dom@18.2.0)(react@18.2.0)
       '@types/react': 18.2.21
       '@types/react-dom': 18.2.7
       react: 18.2.0
@@ -4901,6 +4922,7 @@ packages:
       '@types/pg': 8.10.2
       kysely: 0.25.0
       pg: 8.11.3
+    dev: false
 
   /dset@3.1.2:
     resolution: {integrity: sha512-g/M9sqy3oHe477Ar4voQxWtaPIFw1jTdKZuomOjhCcBx9nHUNn0pu6NopuFFrTh/TRZIKEj+76vLWFu9BNKk+Q==}
@@ -7544,15 +7566,6 @@ packages:
       loose-envify: 1.4.0
       react: 18.2.0
       scheduler: 0.23.0
-    dev: false
-
-  /react-hook-form@7.46.1(react@18.2.0):
-    resolution: {integrity: sha512-0GfI31LRTBd5tqbXMGXT1Rdsv3rnvy0FjEk8Gn9/4tp6+s77T7DPZuGEpBRXOauL+NhyGT5iaXzdIM2R6F/E+w==}
-    engines: {node: '>=12.22.0'}
-    peerDependencies:
-      react: ^16.8.0 || ^17 || ^18
-    dependencies:
-      react: 18.2.0
     dev: false
 
   /react-is@18.2.0:
