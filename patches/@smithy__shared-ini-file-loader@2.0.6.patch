@@ -1,0 +1,18 @@
+diff --git a/dist-es/getHomeDir.js b/dist-es/getHomeDir.js
+index 8e97c5bb422eef5083e11f18de738b470e720f00..dc92149f20151c1c55f03f897ca9005bde3f8bb9 100644
+--- a/dist-es/getHomeDir.js
++++ b/dist-es/getHomeDir.js
+@@ -1,10 +1,10 @@
+ import { homedir } from "os";
+ import { sep } from "path";
+-import { geteuid } from "process";
++import process from "process";
+ const homeDirCache = {};
+ const getHomeDirCacheKey = () => {
+-    if (geteuid) {
+-        return `${geteuid()}`;
++    if (process.geteuid) {
++        return `${process.geteuid()}`;
+     }
+     return "DEFAULT";
+ };

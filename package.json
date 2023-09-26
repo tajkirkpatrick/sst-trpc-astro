@@ -1,6 +1,6 @@
 {
   "name": "my-sst-app",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "private": true,
   "type": "module",
   "scripts": {
@@ -12,13 +12,18 @@
     "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
-    "sst": "2.25.2",
+    "@tsconfig/node18": "^18.2.2",
     "aws-cdk-lib": "2.95.1",
     "constructs": "10.2.69",
-    "typescript": "^5.2.2",
-    "@tsconfig/node18": "^18.2.2"
+    "sst": "2.25.2",
+    "typescript": "^5.2.2"
   },
   "workspaces": [
     "packages/*"
-  ]
+  ],
+  "pnpm": {
+    "patchedDependencies": {
+      "@smithy/shared-ini-file-loader@2.0.6": "patches/@smithy__shared-ini-file-loader@2.0.6.patch"
+    }
+  }
 }

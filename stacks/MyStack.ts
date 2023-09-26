@@ -1,4 +1,4 @@
-import { StackContext, Api, AstroSite, RDS } from "sst/constructs";
+import { StackContext, Api, AstroSite, RDS, Auth } from "sst/constructs";
 
 export function API({ stack }: StackContext) {
   // const pgDb = new RDS(stack, "Database", {
@@ -17,6 +17,17 @@ export function API({ stack }: StackContext) {
       "GET /api/trpc/{proxy+}": "packages/functions/src/trpc/server.handler",
       "POST /api/trpc/{proxy+}": "packages/functions/src/trpc/server.handler",
     },
+  });
+
+  const auth = new Auth(stack, "auth", {
+    authenticator: {
+      handler: "packages/functions/src/auth.handler",
+    },
+  });
+
+  auth.attach(stack, {
+    api,
+    prefix: "/auth", // optional
   });
 
   const site = new AstroSite(stack, "AstroSite", {
