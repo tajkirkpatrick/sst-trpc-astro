@@ -4,6 +4,11 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+patchedDependencies:
+  '@smithy/shared-ini-file-loader@2.0.6':
+    hash: nqsh3xtlheugkcnrn7d2qaiwdy
+    path: patches/@smithy__shared-ini-file-loader@2.0.6.patch
+
 importers:
 
   .:
@@ -1236,7 +1241,7 @@ packages:
       '@aws-sdk/types': 3.398.0
       '@smithy/credential-provider-imds': 2.0.7
       '@smithy/property-provider': 2.0.6
-      '@smithy/shared-ini-file-loader': 2.0.6
+      '@smithy/shared-ini-file-loader': 2.0.6(patch_hash=nqsh3xtlheugkcnrn7d2qaiwdy)
       '@smithy/types': 2.2.2
       tslib: 2.6.2
     transitivePeerDependencies:
@@ -1254,7 +1259,7 @@ packages:
       '@aws-sdk/types': 3.398.0
       '@smithy/credential-provider-imds': 2.0.7
       '@smithy/property-provider': 2.0.6
-      '@smithy/shared-ini-file-loader': 2.0.6
+      '@smithy/shared-ini-file-loader': 2.0.6(patch_hash=nqsh3xtlheugkcnrn7d2qaiwdy)
       '@smithy/types': 2.2.2
       tslib: 2.6.2
     transitivePeerDependencies:
@@ -1272,7 +1277,7 @@ packages:
       '@aws-sdk/types': 3.398.0
       '@smithy/credential-provider-imds': 2.0.7
       '@smithy/property-provider': 2.0.6
-      '@smithy/shared-ini-file-loader': 2.0.6
+      '@smithy/shared-ini-file-loader': 2.0.6(patch_hash=nqsh3xtlheugkcnrn7d2qaiwdy)
       '@smithy/types': 2.2.2
       tslib: 2.6.2
     transitivePeerDependencies:
@@ -1291,7 +1296,7 @@ packages:
       '@aws-sdk/types': 3.398.0
       '@smithy/credential-provider-imds': 2.0.7
       '@smithy/property-provider': 2.0.6
-      '@smithy/shared-ini-file-loader': 2.0.6
+      '@smithy/shared-ini-file-loader': 2.0.6(patch_hash=nqsh3xtlheugkcnrn7d2qaiwdy)
       '@smithy/types': 2.2.2
       tslib: 2.6.2
     transitivePeerDependencies:
@@ -1303,7 +1308,7 @@ packages:
     dependencies:
       '@aws-sdk/types': 3.398.0
       '@smithy/property-provider': 2.0.6
-      '@smithy/shared-ini-file-loader': 2.0.6
+      '@smithy/shared-ini-file-loader': 2.0.6(patch_hash=nqsh3xtlheugkcnrn7d2qaiwdy)
       '@smithy/types': 2.2.2
       tslib: 2.6.2
     dev: false
@@ -1314,7 +1319,7 @@ packages:
     dependencies:
       '@aws-sdk/types': 3.398.0
       '@smithy/property-provider': 2.0.6
-      '@smithy/shared-ini-file-loader': 2.0.6
+      '@smithy/shared-ini-file-loader': 2.0.6(patch_hash=nqsh3xtlheugkcnrn7d2qaiwdy)
       '@smithy/types': 2.2.2
       tslib: 2.6.2
 
@@ -1326,7 +1331,7 @@ packages:
       '@aws-sdk/token-providers': 3.398.0
       '@aws-sdk/types': 3.398.0
       '@smithy/property-provider': 2.0.6
-      '@smithy/shared-ini-file-loader': 2.0.6
+      '@smithy/shared-ini-file-loader': 2.0.6(patch_hash=nqsh3xtlheugkcnrn7d2qaiwdy)
       '@smithy/types': 2.2.2
       tslib: 2.6.2
     transitivePeerDependencies:
@@ -1341,7 +1346,7 @@ packages:
       '@aws-sdk/token-providers': 3.405.0
       '@aws-sdk/types': 3.398.0
       '@smithy/property-provider': 2.0.6
-      '@smithy/shared-ini-file-loader': 2.0.6
+      '@smithy/shared-ini-file-loader': 2.0.6(patch_hash=nqsh3xtlheugkcnrn7d2qaiwdy)
       '@smithy/types': 2.2.2
       tslib: 2.6.2
     transitivePeerDependencies:
@@ -1569,7 +1574,7 @@ packages:
       '@smithy/node-http-handler': 2.0.5
       '@smithy/property-provider': 2.0.6
       '@smithy/protocol-http': 2.0.5
-      '@smithy/shared-ini-file-loader': 2.0.6
+      '@smithy/shared-ini-file-loader': 2.0.6(patch_hash=nqsh3xtlheugkcnrn7d2qaiwdy)
       '@smithy/smithy-client': 2.0.5
       '@smithy/types': 2.2.2
       '@smithy/url-parser': 2.0.5
@@ -1612,7 +1617,7 @@ packages:
       '@smithy/node-http-handler': 2.0.5
       '@smithy/property-provider': 2.0.6
       '@smithy/protocol-http': 2.0.5
-      '@smithy/shared-ini-file-loader': 2.0.6
+      '@smithy/shared-ini-file-loader': 2.0.6(patch_hash=nqsh3xtlheugkcnrn7d2qaiwdy)
       '@smithy/smithy-client': 2.0.5
       '@smithy/types': 2.2.2
       '@smithy/url-parser': 2.0.5
@@ -3153,7 +3158,7 @@ packages:
     engines: {node: '>=14.0.0'}
     dependencies:
       '@smithy/property-provider': 2.0.6
-      '@smithy/shared-ini-file-loader': 2.0.6
+      '@smithy/shared-ini-file-loader': 2.0.6(patch_hash=nqsh3xtlheugkcnrn7d2qaiwdy)
       '@smithy/types': 2.2.2
       tslib: 2.6.2
     dev: false
@@ -3163,7 +3168,7 @@ packages:
     engines: {node: '>=14.0.0'}
     dependencies:
       '@smithy/property-provider': 2.0.6
-      '@smithy/shared-ini-file-loader': 2.0.6
+      '@smithy/shared-ini-file-loader': 2.0.6(patch_hash=nqsh3xtlheugkcnrn7d2qaiwdy)
       '@smithy/types': 2.2.2
       tslib: 2.6.2
 
@@ -3239,12 +3244,13 @@ packages:
     resolution: {integrity: sha512-2z5Nafy1O0cTf69wKyNjGW/sNVMiqDnb4jgwfMG8ye8KnFJ5qmJpDccwIbJNhXIfbsxTg9SEec2oe1cexhMJvw==}
     engines: {node: '>=14.0.0'}
 
-  /@smithy/shared-ini-file-loader@2.0.6:
+  /@smithy/shared-ini-file-loader@2.0.6(patch_hash=nqsh3xtlheugkcnrn7d2qaiwdy):
     resolution: {integrity: sha512-NO6dHqho6APbVR0DxPtYoL4KXBqUeSM3Slsd103MOgL50YbzzsQmMLtDMZ87W8MlvvCN0tuiq+OrAO/rM7hTQg==}
     engines: {node: '>=14.0.0'}
     dependencies:
       '@smithy/types': 2.2.2
       tslib: 2.6.2
+    patched: true
 
   /@smithy/signature-v4@2.0.5:
     resolution: {integrity: sha512-ABIzXmUDXK4n2c9cXjQLELgH2RdtABpYKT+U131e2I6RbCypFZmxIHmIBufJzU2kdMCQ3+thBGDWorAITFW04A==}
