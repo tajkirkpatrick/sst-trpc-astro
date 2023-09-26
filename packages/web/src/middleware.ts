@@ -1,4 +1,4 @@
-import { auth } from "@/lib/lucia";
+import { auth } from "@/lib/server/lucia";
 import type { MiddlewareResponseHandler } from "astro";
 
 export const onRequest: MiddlewareResponseHandler = async (context, next) => {

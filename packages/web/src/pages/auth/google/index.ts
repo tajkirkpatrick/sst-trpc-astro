@@ -1,4 +1,4 @@
-import { googleAuth } from "@/lib/lucia";
+import { googleAuth } from "@/lib/server/lucia";
 import type { APIRoute } from "astro";
 
 export const GET: APIRoute = async (context) => {

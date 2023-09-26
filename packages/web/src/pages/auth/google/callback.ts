@@ -1,9 +1,7 @@
 import type { APIRoute } from "astro";
 import * as z from "zod";
 import { OAuthRequestError } from "@lucia-auth/oauth";
-import { googleAuth } from "@/lib/lucia";
-
-import { auth } from "@/lib/lucia";
+import { googleAuth, auth } from "@/lib/server/lucia";
 
 const googleAuthSchema = z.object({
   storedState: z.string(),
