@@ -24,7 +24,8 @@ export const usersTable = pgTable("users", {
     .$defaultFn(() => ulid()),
   // other user attributes
   username: text("username"),
-  createdAt: timestamp("createdAt", { withTimezone: true })
+  email: text("email").unique(),
+  createdAt: timestamp("created_at", { withTimezone: true })
     .defaultNow()
     .notNull(),
 });

@@ -29,6 +29,13 @@
       "when": 1694979810915,
       "tag": "0003_ordinary_black_bird",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "5",
+      "when": 1696025752437,
+      "tag": "0004_green_zaladane",
+      "breakpoints": true
     }
   ]
 }
