@@ -1,5 +1,4 @@
-import { eq } from "drizzle-orm";
-import { AuthHandler, LinkAdapter } from "sst/node/auth";
+import { AuthHandler, LinkAdapter, Session } from "sst/node/auth";
 import { createKeyId } from "lucia";
 
 import { keysTable, usersTable } from "@my-sst-app/core/src/drizzle/schema";
@@ -19,22 +18,19 @@ export const handler = AuthHandler({
         console.log("user signed in via magic link", claims);
 
         try {
-          const [user] = await db
-            .select()
-            .from(usersTable)
-            .where(eq(usersTable.email, claims.email));
+          const user = await db.query.usersTable.findFirst({
+            where: (user, { eq }) => eq(user.email, claims.email),
+          });
 
           if (!user) {
             await db.transaction(async (tx) => {
-              await tx.insert(usersTable).values({
-                email: claims.email,
-                username: claims.email,
-              });
-
               const [newUser] = await tx
-                .select({ id: usersTable.id })
-                .from(usersTable)
-                .where(eq(usersTable.email, claims.email));
+                .insert(usersTable)
+                .values({
+                  email: claims.email,
+                  username: claims.email,
+                })
+                .returning();
 
               await tx.insert(keysTable).values({
                 id: createKeyId("email", claims.email),
@@ -47,12 +43,13 @@ export const handler = AuthHandler({
           console.log(e);
         }
 
-        return {
-          statusCode: 301,
-          headers: {
-            Location: "http://localhost:4321/auth/logged-in",
+        return Session.parameter({
+          redirect: "http://localhost:4321/auth/link/callback",
+          type: "public", // you should make your own custom type here
+          properties: {
+            email: claims.email,
           },
-        };
+        });
       },
       onError: async () => {
         return {

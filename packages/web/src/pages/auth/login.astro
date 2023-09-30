@@ -31,6 +31,7 @@ if (Astro.request.method === "POST") {
 
   if (result.success) {
     try {
+      // probably use query-string to create this url
       await fetch(
         `${import.meta.env.PUBLIC_TRPC_URL}/auth/link/authorize?email=${
           result.data.userEmail
@@ -53,11 +54,7 @@ if (Astro.request.method === "POST") {
         console.error("Incorrect username or password");
         return;
       }
-      // const session = await auth.createSession({
-      //   userId: key.userId,
-      //   attributes: {},
-      // });
-      // Astro.locals.auth.setSession(session); // set session cookie
+
       return Astro.redirect("/auth/check-email", 302);
     } catch (e) {
       if (
@@ -70,8 +67,7 @@ if (Astro.request.method === "POST") {
         showErrorMessage = true;
         console.error("Incorrect username or password");
       } else {
-        showErrorMessage = true;
-        console.error("An unknown error occurred during login");
+        showFormatMessage = true;
       }
     }
   } else {
@@ -165,7 +161,7 @@ if (session) return Astro.redirect("/", 302); // redirect to profile page
             <Alert variant="helpful">
               <AlertCircle className="h-4 w-4" />
               <AlertDescription>
-                Invalid input. Please try again!
+                Invalid Credentials. Please try again!
               </AlertDescription>
             </Alert>
           </div>

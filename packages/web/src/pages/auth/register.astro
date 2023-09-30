@@ -38,8 +38,10 @@ if (Astro.request.method === "POST") {
     if (existingUser) {
       // ! Handle the existing user error
       // Probably toast or modal here
+
       showErrorMessage = true;
       console.error("User already exists");
+      // send them to login with the form already filled out due to url params
       return await Astro.redirect("/auth/login", 302);
     }
 
