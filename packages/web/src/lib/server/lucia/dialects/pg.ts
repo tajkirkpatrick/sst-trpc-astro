@@ -4,7 +4,12 @@ import {
   type AnyPgTable,
   type AnyPgColumn,
 } from "drizzle-orm/pg-core";
-import type { Adapter, InitializeAdapter, KeySchema, UserSchema } from "lucia";
+import {
+  type Adapter,
+  type InitializeAdapter,
+  type KeySchema,
+  type UserSchema,
+} from "lucia";
 
 import type { myDrizzleError } from "../adapter";
 
@@ -98,23 +103,26 @@ export function pgDrizzleAdapter(
         if (!record) return null;
 
         return {
+          ...record,
           id: record.id as string,
-          username: record.username! as string,
         };
       },
       setUser: async (userData: UserSchema, keyData: KeySchema | null) => {
         if (!keyData) {
-          await client
-            .insert(user)
-            .values({ username: userData.username, id: userData.id });
+          await client.insert(user).values({
+            ...userData,
+            id: userData.id,
+          });
           return;
         }
         try {
           await client.transaction(async (trx) => {
             try {
-              await trx
-                .insert(user)
-                .values({ username: userData.username, id: userData.id });
+              await trx.insert(user).values({
+                ...userData,
+                username: userData.username,
+                id: userData.id,
+              });
               await trx.insert(key).values({
                 id: keyData.id,
                 hashedPassword: keyData.hashed_password,

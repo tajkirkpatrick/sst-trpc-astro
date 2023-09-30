@@ -23,14 +23,14 @@ export const auth = lucia({
   getUserAttributes(databaseUser) {
     return {
       username: databaseUser.username,
+      email: databaseUser.email,
     };
   },
 });
 
 export const googleAuth = google(auth, {
-  clientId:
-    "943546793372-j7psht0e3sb9csropeiidgo1r4hnqm9r.apps.googleusercontent.com",
-  clientSecret: "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",
+  clientId: import.meta.env.GOOGLE_CLIENT_ID,
+  clientSecret: import.meta.env.GOOGLE_CLIENT_SECRET,
   redirectUri: "http://localhost:4321/auth/google/callback",
   scope: ["email", "profile"],
 });

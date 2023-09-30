@@ -38,14 +38,16 @@ export const GET: APIRoute = async (context) => {
         if (existingUser) return existingUser;
         const user = await createUser({
           attributes: {
-            username: googleUser.email as string,
+            username: googleUser.name as string,
+            email: googleUser.email as string,
           },
         });
         return user;
       } catch {
         const user = await createUser({
           attributes: {
-            username: googleUser.email as string,
+            username: googleUser.name as string,
+            email: googleUser.email as string,
           },
         });
         return user;
