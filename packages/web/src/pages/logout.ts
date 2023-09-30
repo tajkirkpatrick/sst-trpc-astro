@@ -1,5 +1,5 @@
 // src/pages/logout.ts
-import { auth } from "../lib/lucia";
+import { auth } from "@/lib/server/lucia";
 
 import type { APIRoute } from "astro";
 
