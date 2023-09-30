@@ -1,7 +1,5 @@
 ---
 import Layout from "@/layouts/Layout.astro";
-import { auth } from "@/lib/server/lucia";
-import { ulid } from "ulid";
 import { z } from "zod";
 import { DrizzleError } from "drizzle-orm";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -11,6 +9,7 @@ import { Separator } from "@/components/ui/separator";
 import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertCircle } from "lucide-react";
+import { db } from "@/lib/server/drizzle";
 
 let showErrorMessage = false;
 let showFormatMessage = false;
@@ -31,24 +30,30 @@ if (Astro.request.method === "POST") {
   });
 
   if (result.success) {
+    const existingUser = await db.query.usersTable.findFirst({
+      where: (usersTable, { eq }) =>
+        eq(usersTable.email, result.data.userEmail),
+    });
+
+    if (existingUser) {
+      // ! Handle the existing user error
+      // Probably toast or modal here
+      showErrorMessage = true;
+      console.error("User already exists");
+      return await Astro.redirect("/auth/login", 302);
+    }
+
     try {
-      const user = await auth.createUser({
-        userId: ulid(),
-        key: {
-          providerId: "username", // auth method
-          providerUserId: result.data.userEmail.toLowerCase(), // unique id when using "username" auth method
-          password: null, // hashed by Lucia
+      await fetch(
+        `${import.meta.env.PUBLIC_TRPC_URL}/auth/link/authorize?email=${
+          result.data.userEmail
+        }`,
+        {
+          method: "GET",
         },
-        attributes: {
-          username: result.data.userEmail,
-        },
-      });
-      const session = await auth.createSession({
-        userId: user.userId,
-        attributes: {},
-      });
-      Astro.locals.auth.setSession(session); // set session cookie
-      return Astro.redirect("/", 302); // redirect to profile page
+      );
+
+      return Astro.redirect("/auth/check-email", 302);
     } catch (e) {
       // this part depends on the database you're using
       // check for unique constraint error in user table
@@ -93,6 +98,8 @@ if (session) return Astro.redirect("/profile", 302);
               name="userEmail"
               id="userEmail"
               placeholder="user@email.com"
+              required
+              minLength={1}
             />
             <p class="my-2 text-xs text-muted-foreground">
               Sign up with just an email.

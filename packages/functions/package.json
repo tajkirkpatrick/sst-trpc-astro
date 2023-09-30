@@ -13,9 +13,11 @@
     "vitest": "^0.34.3"
   },
   "dependencies": {
+    "@my-sst-app": "workspace:../",
     "@trpc/server": "^10.38.1",
     "@types/aws-lambda": "^8.10.119",
     "drizzle-orm": "^0.28.5",
+    "lucia": "^2.7.0",
     "tozod": "^3.0.0",
     "zod": "^3.22.2"
   }

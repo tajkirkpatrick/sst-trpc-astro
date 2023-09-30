@@ -1,5 +1,4 @@
 ---
-// src/pages/login.astro
 import Layout from "@/layouts/Layout.astro";
 import { auth } from "@/lib/server/lucia";
 import * as z from "zod";
@@ -17,34 +16,49 @@ let showFormatMessage = false;
 
 // check for form submissions
 if (Astro.request.method === "POST") {
-  const { username } = Object.fromEntries(
+  const { userEmail } = Object.fromEntries(
     await Astro.request.formData(),
   ) as Record<string, string>;
 
   // basic check
   const loginSchema = z.object({
-    username: z.string().email(),
+    userEmail: z.string().email(),
   });
 
   const result = loginSchema.safeParse({
-    username,
+    userEmail,
   });
 
   if (result.success) {
     try {
-      // find user by key
-      // and validate password
+      await fetch(
+        `${import.meta.env.PUBLIC_TRPC_URL}/auth/link/authorize?email=${
+          result.data.userEmail
+        }`,
+        {
+          method: "GET",
+        },
+      );
+
+      // // find user by key
+      // // and validate password
       const key = await auth.useKey(
-        "username",
-        result.data.username.toLocaleLowerCase(),
+        "email",
+        result.data.userEmail.toLocaleLowerCase(),
         null,
       );
-      const session = await auth.createSession({
-        userId: key.userId,
-        attributes: {},
-      });
-      Astro.locals.auth.setSession(session); // set session cookie
-      return Astro.redirect("/", 302); // redirect to profile page
+
+      if (!key) {
+        showErrorMessage = true;
+        console.error("Incorrect username or password");
+        return;
+      }
+      // const session = await auth.createSession({
+      //   userId: key.userId,
+      //   attributes: {},
+      // });
+      // Astro.locals.auth.setSession(session); // set session cookie
+      return Astro.redirect("/auth/check-email", 302);
     } catch (e) {
       if (
         e instanceof DrizzleError &&
@@ -93,12 +107,12 @@ if (session) return Astro.redirect("/", 302); // redirect to profile page
           </CardHeader>
           <CardContent>
             <form method="POST" class="w-full space-y-2">
-              <Label htmlFor="username">Email</Label>
+              <Label htmlFor="userEmail">Email</Label>
               <Input
                 type="email"
-                name="username"
-                id="username"
-                placeholder="username@email.com"
+                name="userEmail"
+                id="userEmail"
+                placeholder="user@email.com"
               />
 
               <Button
@@ -151,7 +165,7 @@ if (session) return Astro.redirect("/", 302); // redirect to profile page
             <Alert variant="helpful">
               <AlertCircle className="h-4 w-4" />
               <AlertDescription>
-                Invalid input detected. Please try again!
+                Invalid input. Please try again!
               </AlertDescription>
             </Alert>
           </div>
