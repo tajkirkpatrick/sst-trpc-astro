@@ -42,9 +42,12 @@ if (Astro.request.method === "POST") {
       showErrorMessage = true;
       console.error("User already exists");
 
-      const fromUrl = existingUser.email;
+      const existingUserEmail = existingUser.email;
       // send them to login with the form already filled out due to url params
-      return await Astro.redirect(`/auth/login?email=${fromUrl}`, 302);
+      return await Astro.redirect(
+        `/auth/login?email=${existingUserEmail}`,
+        302,
+      );
     }
 
     try {

@@ -154,7 +154,7 @@ if (session) return Astro.redirect("/", 302);
         </Card>
       </div>
       {
-        redirectedEmail && (
+        redirectedEmail && !showErrorMessage && !showFormatMessage && (
           <div class="mt-2 w-2/3">
             <Alert variant="helpful">
               <AlertCircle className="h-4 w-4" />
@@ -182,7 +182,7 @@ if (session) return Astro.redirect("/", 302);
       {
         showFormatMessage && (
           <div class="mt-2 w-2/3">
-            <Alert variant="helpful">
+            <Alert variant="destructive">
               <AlertCircle className="h-4 w-4" />
               <AlertDescription>
                 Invalid Credentials. Please try again!

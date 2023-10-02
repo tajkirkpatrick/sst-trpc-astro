@@ -1,5 +1,16 @@
 ---
-
+import Layout from "@/layouts/Layout.astro";
+import EmailSent from "./_components/email-sent.astro";
 ---
 
-<h3>Check Email Page</h3>
+<Layout title="Email Sent | Login">
+  <main
+    class="flex h-[90vh] flex-col items-center justify-center overflow-hidden"
+  >
+    <EmailSent width={192} height={192} />
+    <h4 class="scroll-m-20 text-center text-xl font-semibold tracking-tight">
+      An email has been sent to your inbox. <div class="my-2"></div> Please
+      check your email to login.
+    </h4>
+  </main>
+</Layout>
