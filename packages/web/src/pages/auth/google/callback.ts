@@ -1,7 +1,7 @@
+import { auth, googleAuth } from "@/lib/server/lucia";
+import { OAuthRequestError } from "@lucia-auth/oauth";
 import type { APIRoute } from "astro";
 import * as z from "zod";
-import { OAuthRequestError } from "@lucia-auth/oauth";
-import { googleAuth, auth } from "@/lib/server/lucia";
 
 const googleAuthSchema = z.object({
   storedState: z.string(),
@@ -11,6 +11,11 @@ const googleAuthSchema = z.object({
 
 export const GET: APIRoute = async (context) => {
   const storedState = context.cookies.get("google_oauth_state")?.value;
+
+  if (!storedState) {
+    context.redirect("/auth/login", 302);
+  }
+
   const state = context.url.searchParams.get("state");
   const code = context.url.searchParams.get("code");
 
@@ -20,12 +25,10 @@ export const GET: APIRoute = async (context) => {
     code,
   });
 
-  if (!result.success) {
-    return new Response(null, { status: 400 });
-  }
-
-  if (result.data.storedState !== result.data.state) {
-    return new Response(null, { status: 400 });
+  if (!result.success || result.data.storedState !== result.data.state) {
+    return new Response(null, {
+      status: 400,
+    });
   }
 
   try {
@@ -63,6 +66,7 @@ export const GET: APIRoute = async (context) => {
     return context.redirect("/", 302); // redirect to profile page
   } catch (e) {
     if (e instanceof OAuthRequestError) {
+      console.error(e);
       // invalid code
       return new Response(null, {
         status: 400,
