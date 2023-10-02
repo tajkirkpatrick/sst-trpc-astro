@@ -5,12 +5,11 @@ import { Button } from "@/components/ui/button";
 const session = await Astro.locals.auth.validate();
 ---
 
-<Layout title="Homepage">
-  <main>
+<Layout title="Home">
+  <main class="container mx-auto">
     <h1 id="greeting" class="capitalize">
       Welcome {session ? session.user.username + "!" : "Unknown User"}
     </h1>
-    <!-- style the input using tailwind css with a gray border and a ring on focus -->
     <input
       type="text"
       name="name"

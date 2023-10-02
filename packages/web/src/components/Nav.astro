@@ -1,5 +1,7 @@
 ---
 import { Button } from "@/components/ui/button";
+import MobileNav from "@/components/react/navigation/navigation-mobile-nav";
+import { Image } from "astro:assets";
 
 export interface Props {
   title?: string;
@@ -16,17 +18,23 @@ const session = await Astro.locals.auth.validate();
   <div class="container mx-auto flex items-center justify-between">
     <a href="/">
       <div>
-        <h1 class="text-2xl">{title}</h1>
+        <Image src="/logo.svg" alt="temp logo" width="32" height="32" />
       </div>
     </a>
-    <div class="flex items-center gap-x-2">
-      {
+    <div class="md:hidden">
+      <MobileNav
+        username={session ? session.user.username : undefined}
+        client:load
+      />
+    </div>
+    <div class="hidden items-center gap-x-2 md:flex">
+      <!-- {
         !session && (
           <Button variant="link">
             <a href="/">Home</a>
           </Button>
         )
-      }
+      } -->
       {
         !session && (
           <Button variant="link">

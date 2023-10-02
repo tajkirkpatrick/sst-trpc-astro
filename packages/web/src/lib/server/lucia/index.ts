@@ -32,7 +32,7 @@ export const googleAuth = google(auth, {
   clientId: import.meta.env.GOOGLE_CLIENT_ID,
   clientSecret: import.meta.env.GOOGLE_CLIENT_SECRET,
   redirectUri: "http://localhost:4321/auth/google/callback",
-  scope: ["email", "profile"],
+  scope: ["https://www.googleapis.com/auth/userinfo.email"],
 });
 
 export type Auth = typeof auth;
