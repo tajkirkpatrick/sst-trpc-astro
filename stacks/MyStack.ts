@@ -5,6 +5,11 @@ export function API({ stack }: StackContext) {
   //   engine: "postgresql13.9",
   //   defaultDatabaseName: "myDatabase",
   //   migrations: "packages/core/migrations",
+  //   scaling: {
+  //     autoPause: true,
+  //     minCapacity: "ACU_2",
+  //     maxCapacity: "ACU_2"
+  //   }
   // });
 
   const api = new Api(stack, "api", {
