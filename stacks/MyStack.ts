@@ -39,7 +39,7 @@ export function API({ stack }: StackContext) {
     path: "packages/web",
     // bind: [pgDb],
     environment: {
-      PUBLIC_TRPC_URL: api.url,
+      PUBLIC_SST_API_URL: api.url,
       // DB_NAME: pgDb.defaultDatabaseName,
       // DB_SECRET_ARN: pgDb.secretArn,
       // DB_ARN: pgDb.clusterArn,

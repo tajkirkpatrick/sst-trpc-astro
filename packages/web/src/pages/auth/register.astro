@@ -52,7 +52,7 @@ if (Astro.request.method === "POST") {
 
     try {
       await fetch(
-        `${import.meta.env.PUBLIC_TRPC_URL}/auth/link/authorize?email=${
+        `${import.meta.env.PUBLIC_SST_API_URL}/auth/link/authorize?email=${
           result.data.userEmail
         }`,
         {

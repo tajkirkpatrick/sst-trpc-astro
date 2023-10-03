@@ -21,7 +21,7 @@ export const trpcClient = createTRPCProxyClient<AppRouter>({
         (opts.direction === "down" && opts.result instanceof Error),
     }),
     httpBatchLink({
-      url: `${import.meta.env.PUBLIC_TRPC_URL}/api/trpc`,
+      url: `${import.meta.env.PUBLIC_SST_API_URL}/api/trpc`,
       headers() {
         return {
           Authorization: getTokenFromHTML(),
