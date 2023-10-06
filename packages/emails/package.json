@@ -4,14 +4,15 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "preview": "exec email preview ./templates/"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@jsx-email/all": "^2.0.0",
-    "@jsx-email/cli": "^1.0.9",
+    "@jsx-email/all": "^2.0.1",
+    "@jsx-email/cli": "^1.0.10",
     "@types/react": "^18.2.24",
     "react": "^18.2.0",
     "superstruct": "^1.0.3"
