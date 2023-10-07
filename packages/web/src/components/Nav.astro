@@ -1,13 +1,12 @@
 ---
+import { Image } from "astro:assets";
 import { Button } from "@/components/ui/button";
 import MobileNav from "@/components/react/navigation/navigation-mobile-nav";
-import { Image } from "astro:assets";
+import NavAvatar from "@/components/react/navigation/navigation-avatar-popover";
 
 export interface Props {
   title?: string;
 }
-
-const { title = "Site Title" } = Astro.props as Props;
 
 const session = await Astro.locals.auth.validate();
 ---
@@ -28,24 +27,11 @@ const session = await Astro.locals.auth.validate();
       />
     </div>
     <div class="hidden items-center gap-x-2 md:flex">
-      <!-- {
-        !session && (
-          <Button variant="link">
-            <a href="/">Home</a>
-          </Button>
-        )
-      } -->
+      {session && <NavAvatar client:load />}
       {
         !session && (
           <Button variant="link">
             <a href="/auth/login">Login</a>
-          </Button>
-        )
-      }
-      {
-        session && (
-          <Button variant="outline">
-            <a href="/logout">Logout</a>
           </Button>
         )
       }
