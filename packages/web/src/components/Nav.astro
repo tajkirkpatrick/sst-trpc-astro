@@ -30,8 +30,24 @@ const session = await Astro.locals.auth.validate();
       {session && <NavAvatar client:load />}
       {
         !session && (
-          <Button variant="link">
-            <a href="/auth/login">Login</a>
+          <Button variant="ghost">
+            <a href="/auth/login">
+              <span>
+                <svg
+                  class="inline-flex"
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="18"
+                  height="18"
+                  viewBox="0 0 256 256"
+                >
+                  <path
+                    fill="currentColor"
+                    d="m138.83 130.83l-40 40a4 4 0 0 1-5.66-5.66L126.34 132H24a4 4 0 0 1 0-8h102.34L93.17 90.83a4 4 0 0 1 5.66-5.66l40 40a4 4 0 0 1 0 5.66ZM192 36h-56a4 4 0 0 0 0 8h56a4 4 0 0 1 4 4v160a4 4 0 0 1-4 4h-56a4 4 0 0 0 0 8h56a12 12 0 0 0 12-12V48a12 12 0 0 0-12-12Z"
+                  />
+                </svg>
+              </span>
+              Login
+            </a>
           </Button>
         )
       }
@@ -39,21 +55,22 @@ const session = await Astro.locals.auth.validate();
         !session && (
           <a href="/auth/register">
             <div>
-              <Button id="login">
-                Register
+              <Button id="login" className="font-light">
                 <span>
                   <svg
+                    class="mr-1"
                     xmlns="http://www.w3.org/2000/svg"
-                    width="28"
-                    height="32"
-                    viewBox="0 0 512 512"
+                    width="18"
+                    height="18"
+                    viewBox="0 0 256 256"
                   >
                     <path
-                      d="M322.2 349.7c-3.1-3.1-3-8 0-11.3l66.4-74.4H104c-4.4 0-8-3.6-8-8s3.6-8 8-8h284.6l-66.3-74.4c-2.9-3.4-3.2-8.1-.1-11.2 3.1-3.1 8.5-3.3 11.4-.1 0 0 79.2 87 80 88s2.4 2.8 2.4 5.7-1.6 4.9-2.4 5.7-80 88-80 88c-1.5 1.5-3.6 2.3-5.7 2.3s-4.1-.8-5.7-2.3z"
                       fill="currentColor"
+                      d="M170 56a6 6 0 0 1 6-6h18V32a6 6 0 0 1 12 0v18h18a6 6 0 0 1 0 12h-18v18a6 6 0 0 1-12 0V62h-18a6 6 0 0 1-6-6Zm58.59 55A101.9 101.9 0 1 1 145 27.41a6 6 0 1 1-2 11.83A91.66 91.66 0 0 0 128 38a89.95 89.95 0 0 0-65.51 151.64a77.53 77.53 0 0 1 40-31.38a46 46 0 1 1 51 0a77.53 77.53 0 0 1 40 31.38A89.65 89.65 0 0 0 218 128a91.76 91.76 0 0 0-1.24-15a6 6 0 1 1 11.83-2ZM128 154a34 34 0 1 0-34-34a34 34 0 0 0 34 34Zm0 64a89.58 89.58 0 0 0 56.56-20a66 66 0 0 0-113.12 0A89.58 89.58 0 0 0 128 218Z"
                     />
                   </svg>
                 </span>
+                Register
               </Button>
             </div>
           </a>

@@ -20,4 +20,4 @@ const pool = new Pool({
   database: "serverless",
 });
 
-export const db = drizzle(pool, { schema, logger: true });
+export const db = drizzle(pool, { schema, logger: false });
