@@ -79,6 +79,10 @@ export function pgDrizzleAdapter(
           .where(eq(user.id, sessionRecord.userId))
           .then((res) => (res[0] as UserSchema) ?? null);
 
+        if (!userRecord) {
+          return [null, null];
+        }
+
         return [
           {
             id: sessionRecord.id as string,
@@ -88,7 +92,7 @@ export function pgDrizzleAdapter(
           },
           {
             ...userRecord,
-            id: userRecord?.id as string,
+            id: userRecord.id as string,
           },
         ];
       },
@@ -120,7 +124,6 @@ export function pgDrizzleAdapter(
             try {
               await trx.insert(user).values({
                 ...userData,
-                username: userData.username,
                 id: userData.id,
               });
               await trx.insert(key).values({
@@ -169,11 +172,13 @@ export function pgDrizzleAdapter(
           .where(eq(session.id, sessionId))
           .then((res) => res[0] ?? null);
 
+        if (!record) return null;
+
         return {
-          id: record?.id! as string,
-          active_expires: Number(record?.activeExpires!),
-          idle_expires: Number(record?.idleExpires!),
-          user_id: record?.userId! as string,
+          id: record.id as string,
+          active_expires: Number(record.activeExpires),
+          idle_expires: Number(record.idleExpires),
+          user_id: record.userId as string,
         };
       },
       getSessionsByUserId: async (userId) => {
@@ -187,11 +192,13 @@ export function pgDrizzleAdapter(
           .where(eq(session.userId, userId))
           .then((res) => res ?? []);
 
+        if (!records || records.length == 0) return null;
+
         const resultRecords = records.map((record) => ({
-          id: record.id! as string,
-          active_expires: Number(record.activeExpires!),
-          idle_expires: Number(record.idleExpires!),
-          user_id: record.userId! as string,
+          id: record.id as string,
+          active_expires: Number(record.activeExpires),
+          idle_expires: Number(record.idleExpires),
+          user_id: record.userId as string,
         }));
 
         return resultRecords;
@@ -240,7 +247,12 @@ export function pgDrizzleAdapter(
         try {
           await client
             .update(session)
-            .set({ ...partialSession })
+            .set({
+              ...partialSession,
+              activeExpires: partialSession.active_expires,
+              idleExpires: partialSession.idle_expires,
+              userId: partialSession.user_id,
+            })
             .where(eq(session.id, sessionId));
         } catch (e) {
           const error = e as Partial<myDrizzleError>;
@@ -271,10 +283,12 @@ export function pgDrizzleAdapter(
           .where(eq(key.userId, userId))
           .then((res) => res ?? []);
 
+        if (!records || records.length == 0) return null;
+
         const resultRecords = records.map((record) => ({
-          id: record.id! as string,
-          hashed_password: record.hashedPassword! as string,
-          user_id: record.userId! as string,
+          id: record.id as string,
+          hashed_password: record.hashedPassword ?? (null as string | null),
+          user_id: record.userId as string,
         }));
 
         return resultRecords;
@@ -303,16 +317,12 @@ export function pgDrizzleAdapter(
         try {
           const { hashed_password, user_id, ...restPartialKey } = partialKey;
 
-          // if (hashed_password === undefined || user_id === undefined) {
-          //   throw new Error("Missing updateKey data");
-          // }
-
           await client
             .update(key)
             .set({
+              ...restPartialKey,
               hashedPassword: hashed_password,
               userId: user_id,
-              ...restPartialKey,
             })
             .where(eq(key.id, keyId));
         } catch (e) {

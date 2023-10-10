@@ -5,8 +5,8 @@ import { PgDatabase } from "drizzle-orm/pg-core";
 import { BaseSQLiteDatabase } from "drizzle-orm/sqlite-core";
 import { DrizzleError, is } from "drizzle-orm";
 
-import { mySqlDrizzleAdapter } from "./dialects/mysql";
 import { pgDrizzleAdapter } from "./dialects/pg";
+import { mySqlDrizzleAdapter } from "./dialects/mysql";
 import { SQLiteDrizzleAdapter } from "./dialects/sqlite";
 
 export type AnyMySqlDatabase = MySqlDatabase<any, any>;
@@ -40,18 +40,18 @@ export function customAdapter<SqlFlavor extends SqlFlavorOptions>(
 
   variableNames = variableNames || getVariableNames();
 
-  if (is(db, MySqlDatabase)) {
-    // ! currently disabled
-    // return mySqlDrizzleAdapter(db, table as MySqlTableFn, modelNames);
-    return mySqlDrizzleAdapter(db);
-  } else if (is(db, PgDatabase)) {
-    // * currently enabled
-    return pgDrizzleAdapter(db, variableNames);
-  } else if (is(db, BaseSQLiteDatabase)) {
-    // ! currently disabled
-    // return SQLiteDrizzleAdapter(db, table as SQLiteTableFn, modelNames);
-    return SQLiteDrizzleAdapter(db);
-  }
+  if (is(db, PgDatabase)) return pgDrizzleAdapter(db, variableNames);
+  // TODO: add support for other databases
+
+  // else if (is(db, MySqlDatabase)) {
+  // ! currently disabled
+  //   // return mySqlDrizzleAdapter(db, table as MySqlTableFn, modelNames);
+  //   return mySqlDrizzleAdapter(db);
+  // } else if (is(db, BaseSQLiteDatabase)) {
+  // ! currently disabled
+  //   // return SQLiteDrizzleAdapter(db, table as SQLiteTableFn, modelNames);
+  //   return SQLiteDrizzleAdapter(db);
+  // }
 
   throw new Error(
     `Unsupported database type (${typeof db}) in Drizzle adapter.`,
