@@ -1,6 +1,7 @@
 import { auth, googleAuth } from "@/lib/server/lucia";
 import { OAuthRequestError } from "@lucia-auth/oauth";
 import type { APIRoute } from "astro";
+import type { User } from "lucia";
 import * as z from "zod";
 
 const googleAuthSchema = z.object({
@@ -36,25 +37,15 @@ export const GET: APIRoute = async (context) => {
       await googleAuth.validateCallback(result.data.code);
 
     const getUser = async () => {
-      try {
-        const existingUser = await getExistingUser();
-        if (existingUser) return existingUser;
-        const user = await createUser({
-          attributes: {
-            username: googleUser.name as string,
-            email: googleUser.email as string,
-          },
-        });
-        return user;
-      } catch {
-        const user = await createUser({
-          attributes: {
-            username: googleUser.name as string,
-            email: googleUser.email as string,
-          },
-        });
-        return user;
-      }
+      const existingUser = await getExistingUser();
+      if (existingUser) return existingUser;
+      const user = await createUser({
+        attributes: {
+          username: googleUser.name as string,
+          email: googleUser.email as string,
+        },
+      });
+      return user;
     };
 
     const user = await getUser();

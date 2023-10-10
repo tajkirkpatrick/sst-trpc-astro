@@ -256,10 +256,12 @@ export function pgDrizzleAdapter(
           .where(eq(key.id, keyId))
           .then((res) => res[0] ?? null);
 
+        if (!record) return null;
+
         return {
-          id: record?.id! as string,
-          hashed_password: record?.hashedPassword! as string,
-          user_id: record?.userId! as string,
+          id: record.id as string,
+          hashed_password: record.hashedPassword ?? (null as string | null),
+          user_id: record.userId as string,
         };
       },
       getKeysByUserId: async (userId) => {
@@ -301,9 +303,9 @@ export function pgDrizzleAdapter(
         try {
           const { hashed_password, user_id, ...restPartialKey } = partialKey;
 
-          if (hashed_password === undefined || user_id === undefined) {
-            throw new Error("Missing updateKey data");
-          }
+          // if (hashed_password === undefined || user_id === undefined) {
+          //   throw new Error("Missing updateKey data");
+          // }
 
           await client
             .update(key)
