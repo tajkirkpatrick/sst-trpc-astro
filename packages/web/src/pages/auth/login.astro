@@ -16,6 +16,7 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import ky from "ky";
 
 let showErrorMessage = false;
 let showFormatMessage = false;
@@ -38,18 +39,13 @@ if (Astro.request.method === "POST") {
 
   if (result.success) {
     try {
-      // probably use query-string to create this url
-      await fetch(
-        `${import.meta.env.PUBLIC_SST_API_URL}/auth/link/authorize?email=${
-          result.data.userEmail
-        }`,
-        {
-          method: "GET",
-        },
-      );
+      ky.get("auth/link/authorize", {
+        searchParams: { email: result.data.userEmail },
+        prefixUrl: import.meta.env.PUBLIC_SST_API_URL,
+      });
 
-      // // find user by key
-      // // and validate password
+      // find user by key
+      // and validate password
       const key = await auth.useKey(
         "email",
         result.data.userEmail.toLocaleLowerCase(),
