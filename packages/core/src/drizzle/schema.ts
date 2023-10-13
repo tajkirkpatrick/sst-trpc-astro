@@ -1,12 +1,5 @@
 import { ulid } from "ulid";
-import {
-  pgTable,
-  text,
-  bigint,
-  varchar,
-  timestamp,
-  boolean,
-} from "drizzle-orm/pg-core";
+import { pgTable, text, bigint, varchar, timestamp } from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
 
 import { USER_ID_LENGTH } from "./constants";
@@ -16,19 +9,29 @@ import { USER_ID_LENGTH } from "./constants";
 /**
  * `users` table of the AWS Aurora database
  */
-export const usersTable = pgTable("users", {
-  id: varchar("id", {
-    length: USER_ID_LENGTH,
-  })
-    .primaryKey()
-    .$defaultFn(() => ulid()),
-  // other user attributes
-  username: text("username"),
-  email: text("email").unique(),
-  createdAt: timestamp("created_at", { withTimezone: true })
-    .defaultNow()
-    .notNull(),
-});
+export const usersTable = pgTable(
+  "users",
+  {
+    id: varchar("id", {
+      length: USER_ID_LENGTH,
+    })
+      .primaryKey()
+      .$defaultFn(() => ulid()),
+    // other user attributes
+    username: text("username"),
+    email: text("email").unique(),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+  }
+  // index example
+
+  // (table) => {
+  //   return {
+  //     emailIdx: uniqueIndex("email_idx").on(table.email),
+  //   };
+  // }
+);
 
 export const userRelations = relations(usersTable, ({ many }) => ({
   sessions: many(sessionsTable),
