@@ -1,6 +1,8 @@
 import { auth, googleAuth } from "@/lib/server/lucia";
 import { OAuthRequestError } from "@lucia-auth/oauth";
 import type { APIRoute } from "astro";
+import { db } from "@/lib/server/drizzle";
+import { userDetailsTable } from "@my-sst-app/core/src/drizzle/schema";
 import * as z from "zod";
 
 const googleAuthSchema = z.object({
@@ -48,6 +50,17 @@ export const GET: APIRoute = async (context) => {
     };
 
     const user = await getUser();
+
+    await db
+      .insert(userDetailsTable)
+      .values({
+        userId: user.userId,
+        firstName: null,
+        lastName: null,
+        displayName: googleUser.name as string,
+      })
+      .onConflictDoNothing();
+
     const session = await auth.createSession({
       userId: user.userId,
       attributes: {},

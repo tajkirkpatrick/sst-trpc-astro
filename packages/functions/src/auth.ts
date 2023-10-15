@@ -1,7 +1,11 @@
 import { AuthHandler, LinkAdapter, Session } from "sst/node/auth";
 import { createKeyId } from "lucia";
 
-import { keysTable, usersTable } from "@my-sst-app/core/src/drizzle/schema";
+import {
+  keysTable,
+  usersTable,
+  userDetailsTable,
+} from "@my-sst-app/core/src/drizzle/schema";
 import { db } from "@my-sst-app/core/drizzle";
 
 export const handler = AuthHandler({
@@ -31,6 +35,13 @@ export const handler = AuthHandler({
                   username: claims.email,
                 })
                 .returning();
+
+              await tx.insert(userDetailsTable).values({
+                userId: newUser.id,
+                firstName: null,
+                lastName: null,
+                displayName: claims.email,
+              });
 
               await tx.insert(keysTable).values({
                 id: createKeyId("email", claims.email),
