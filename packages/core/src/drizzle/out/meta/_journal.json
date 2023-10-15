@@ -36,6 +36,27 @@
       "when": 1696025752437,
       "tag": "0004_green_zaladane",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "5",
+      "when": 1697394031583,
+      "tag": "0005_wooden_hydra",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "5",
+      "when": 1697395991712,
+      "tag": "0006_silly_monster_badoon",
+      "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "5",
+      "when": 1697396258578,
+      "tag": "0007_legal_colleen_wing",
+      "breakpoints": true
     }
   ]
 }
