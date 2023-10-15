@@ -11,8 +11,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@jsx-email/all": "^2.0.1",
-    "@jsx-email/cli": "^1.0.10",
+    "@jsx-email/all": "^2.2.0",
+    "@jsx-email/cli": "^1.1.0",
     "@types/react": "^18.2.24",
     "react": "^18.2.0",
     "superstruct": "^1.0.3"
