@@ -116,7 +116,7 @@ export const keysTable = pgTable("auth_keys", {
   hashedPassword: varchar("hashed_password", {
     length: 255,
   }),
-  createdAt: timestamp("createdAt", { withTimezone: true })
+  createdAt: timestamp("created_at", { withTimezone: true })
     .defaultNow()
     .notNull(),
   // primary: boolean("primary").notNull().default(false),

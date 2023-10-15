@@ -1,0 +1,1 @@
+ALTER TABLE "auth_keys" RENAME COLUMN "createdAt" TO "created_at";
