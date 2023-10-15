@@ -34,19 +34,48 @@ export const GET: APIRoute = async (context) => {
   }
 
   try {
-    const { createUser, googleUser, getExistingUser } =
+    const { createUser, googleUser, getExistingUser, createKey } =
       await googleAuth.validateCallback(result.data.code);
 
     const getUser = async () => {
       const existingUser = await getExistingUser();
       if (existingUser) return existingUser;
-      const user = await createUser({
+      if (!googleUser.email_verified) {
+        throw new Error("Email not verified");
+      }
+
+      const existingDatabaseUserWithEmail = await db.query.usersTable.findFirst(
+        {
+          where: (users, { eq }) => eq(users.email, googleUser.email as string),
+        },
+      );
+
+      if (existingDatabaseUserWithEmail) {
+        const user = auth.transformDatabaseUser(existingDatabaseUserWithEmail);
+        await createKey(user.userId);
+
+        // implement existing manual email login being able to link to google login.
+        // await db
+        //   .insert(userDetailsTable)
+        //   .values({
+        //     userId: user.userId,
+        //     firstName: null,
+        //     lastName: null,
+        //     displayName: googleUser.name as string,
+        //   })
+        //   .onConflictDoUpdate({
+        //     target: userDetailsTable.user_id,
+        //     set: { displayName: (googleUser.name as string) || TK },
+        //   });
+
+        return user;
+      }
+
+      return await createUser({
         attributes: {
-          username: googleUser.name as string,
           email: googleUser.email as string,
         },
       });
-      return user;
     };
 
     const user = await getUser();
