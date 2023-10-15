@@ -1,6 +1,5 @@
 ---
 import Layout from "@/layouts/Layout.astro";
-import { Button } from "@/components/ui/button";
 
 const session = await Astro.locals.auth.validate();
 ---
@@ -8,56 +7,7 @@ const session = await Astro.locals.auth.validate();
 <Layout title="Home">
   <main class="container mx-auto">
     <h1 id="greeting" class="capitalize">
-      Welcome {session ? session.user.username + "!" : "Unknown User"}
+      Welcome {session ? session.user.displayName + "!" : "Unknown User"}
     </h1>
-    <input
-      type="text"
-      name="name"
-      class="h-8 border-2 border-gray-300 focus:ring-2 focus:ring-blue-500"
-    />
-    <button
-      id="btn"
-      class="rounded-md border-2 border-black bg-slate-500/20 px-4 py-2 disabled:bg-blue-500/50"
-    >
-      Click Me
-    </button>
-    <Button id="trpc">Call TRPC</Button>
   </main>
 </Layout>
-
-<script>
-  import { trpcClient } from "@/lib/client/trpc";
-
-  const greeting = document.getElementById("greeting")!;
-
-  const testBtn = document.getElementById("trpc") as HTMLButtonElement;
-  testBtn.onclick = async () => {
-    try {
-      // @ts-ignore
-      await trpcClient.getRecords.query();
-      console.log("completed");
-    } catch (e) {
-      console.log(e);
-    }
-  };
-
-  const btn = document.getElementById("btn") as HTMLButtonElement;
-  btn.onclick = async () => {
-    // capture the text in the input element and check that it is not blank, if it is blank alert invalid input
-    const name = document.querySelector("input[name=name]") as HTMLInputElement;
-
-    if (name.value === "") {
-      alert("Invalid input");
-      return;
-    }
-
-    console.log("fetching...");
-    btn.disabled = true;
-    btn.innerHTML = "Loading...";
-    const [resp] = await trpcClient.createRecord.mutate();
-    console.log("fetch complete.");
-    btn.disabled = false;
-    btn.innerHTML = "Click Me";
-    greeting.innerHTML = resp.fullName;
-  };
-</script>

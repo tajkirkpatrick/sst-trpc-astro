@@ -8,10 +8,10 @@ import {
 } from "@/components/ui/sheet";
 
 export interface MobileNavProps {
-  username: string | undefined;
+  userDisplayName: string | undefined;
 }
 
-export default function MobileNav({ username }: MobileNavProps) {
+export default function MobileNav({ userDisplayName }: MobileNavProps) {
   return (
     <Sheet>
       <SheetTrigger>
@@ -40,11 +40,11 @@ export default function MobileNav({ username }: MobileNavProps) {
         <SheetHeader>
           <SheetTitle>
             <p className="text-left text-lg font-semibold">
-              {username ? `Welcome, ${username}` : "Menu"}
+              {userDisplayName ? `Welcome, ${userDisplayName}` : "Menu"}
             </p>
           </SheetTitle>
         </SheetHeader>
-        {!username && (
+        {!userDisplayName && (
           <div className="flex grow flex-col items-center justify-center">
             <ul className="flex flex-col place-content-start gap-y-4 text-left">
               <li className="w-full">
@@ -127,7 +127,7 @@ export default function MobileNav({ username }: MobileNavProps) {
             </ul>
           </div>
         )}
-        {username && (
+        {userDisplayName && (
           <div className="flex grow flex-col items-center justify-center">
             <ul className="flex flex-col place-content-start gap-y-4 text-left">
               <li>
