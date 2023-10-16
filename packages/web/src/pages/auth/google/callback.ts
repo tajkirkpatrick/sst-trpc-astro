@@ -52,43 +52,47 @@ export const GET: APIRoute = async (context) => {
 
       if (existingDatabaseUserWithEmail) {
         const user = auth.transformDatabaseUser(existingDatabaseUserWithEmail);
-        await createKey(user.userId);
 
-        // implement existing manual email login being able to link to google login.
-        // await db
-        //   .insert(userDetailsTable)
-        //   .values({
-        //     userId: user.userId,
-        //     firstName: null,
-        //     lastName: null,
-        //     displayName: googleUser.name as string,
-        //   })
-        //   .onConflictDoUpdate({
-        //     target: userDetailsTable.user_id,
-        //     set: { displayName: (googleUser.name as string) || TK },
-        //   });
+        await db
+          .insert(userDetailsTable)
+          .values({
+            userId: user.userId,
+            firstName: null,
+            lastName: null,
+            displayName: googleUser.name as string,
+          })
+          .onConflictDoUpdate({
+            target: userDetailsTable.userId,
+            set: {
+              userId: user.userId,
+              displayName: googleUser.name as string,
+              firstName: null,
+              lastName: null,
+            },
+          });
+
+        await createKey(user.userId);
 
         return user;
       }
 
-      return await createUser({
+      const user = await createUser({
         attributes: {
           email: googleUser.email as string,
         },
       });
-    };
 
-    const user = await getUser();
-
-    await db
-      .insert(userDetailsTable)
-      .values({
+      await db.insert(userDetailsTable).values({
         userId: user.userId,
         firstName: null,
         lastName: null,
         displayName: googleUser.name as string,
-      })
-      .onConflictDoNothing();
+      });
+
+      return user;
+    };
+
+    const user = await getUser();
 
     const session = await auth.createSession({
       userId: user.userId,

@@ -32,7 +32,6 @@ export const handler = AuthHandler({
                 .insert(usersTable)
                 .values({
                   email: claims.email,
-                  username: claims.email,
                 })
                 .returning();
 
