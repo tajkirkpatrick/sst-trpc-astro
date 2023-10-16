@@ -16,7 +16,7 @@ async function up(db) {
  */
 async function down(db) {
   await sql`
-    ALTER TABLE "users" ADD COLUMN "username" text NOT NULL;
+    ALTER TABLE "users" ADD COLUMN "username" text;
   `.execute(db);
 }
 
