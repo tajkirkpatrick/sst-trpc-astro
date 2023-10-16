@@ -57,9 +57,10 @@ export const GET: APIRoute = async (context) => {
           .insert(userDetailsTable)
           .values({
             userId: user.userId,
+            displayName: googleUser.name as string,
             firstName: null,
             lastName: null,
-            displayName: googleUser.name as string,
+            verified: true,
           })
           .onConflictDoUpdate({
             target: userDetailsTable.userId,
@@ -68,6 +69,7 @@ export const GET: APIRoute = async (context) => {
               displayName: googleUser.name as string,
               firstName: null,
               lastName: null,
+              verified: true,
             },
           });
 
@@ -84,9 +86,11 @@ export const GET: APIRoute = async (context) => {
 
       await db.insert(userDetailsTable).values({
         userId: user.userId,
+        displayName: googleUser.name as string,
         firstName: null,
         lastName: null,
-        displayName: googleUser.name as string,
+        // do you trust the user has a verified email just because they used oauth to login?
+        // verified: true,
       });
 
       return user;
